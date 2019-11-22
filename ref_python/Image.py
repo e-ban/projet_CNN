@@ -10,8 +10,8 @@ class kernel :
         self.width = w
         self.canal = c
         self.depth = l
-        
-     
+
+
     def generate_Random(self):
         line=[]
         pixel=[]
@@ -36,7 +36,7 @@ class kernel :
         for line in self.k:
             print(line)
             print("\n")
-        
+
 
 class Image :
     def __init__(self):
@@ -47,7 +47,7 @@ class Image :
         self.format=""
         self.lumMax=0
         self.label=""
-        
+
     def cleanUp(self):
         self.matrixPix=[]
         self.height=0
@@ -55,7 +55,7 @@ class Image :
         self.depth = 0
         self.format=""
         self.label=""
-    
+
     def copy(self,image):
         self.height = image.height
         self.width = image.width
@@ -64,22 +64,22 @@ class Image :
         self.lumMax = image.lumMax
         self.matrixPix = copy.deepcopy(image.matrixPix)
         self.label = image.label
-        
+
     def load_pgm(self,FileName,format):
         self.cleanUp()  #reset all fields to initial values
         img=open(FileName)
         self.format=img.readline()
-        
+
         if format=="P3":
-           
+
             self.depth = 3
         else :
             self.depth = 1
-        
+
         line=img.readline()
-        
+
         while line[0] == '#' : line=img.readline()
-    
+
         (self.width,self.height) = [int(i) for i in line.split()]
         self.lumMax=img.readline()
         mat = []
@@ -89,10 +89,10 @@ class Image :
         A = np.array(mat)
         self.matrixPix=A.reshape(self.height,self.width,self.depth)
         img.close()
-        
-    
-                
-    
+
+
+
+
     def generate_Random(self,width,height,depth,max,format):
         self.cleanUp()
         line=[]
@@ -110,34 +110,34 @@ class Image :
         self.depth = depth
         self.lumMax=max
         self.format=format
-    
+
     def centered_crop(self,newWidth,newHeight):
         if((newWidth>self.width) or (newHeight>self.height)):
             return -1
-        
+
         xmargin= (self.width-newWidth)//2
         ymargin = (self.height-newHeight)//2
-        
-        
+
+
         #crop the up & bottom lines
         for i in range(ymargin):
             self.matrixPix.pop(0)
             self.matrixPix.pop(len(self.matrixPix)-1)
-        
+
         for i in range(0,newHeight,1):
             for j in range(xmargin):
                 self.matrixPix[i].pop(0)
                 self.matrixPix[i].pop(len(self.matrixPix[i])-1)
-            
+
         self.height=newHeight
         self.width=newWidth
         return 0
-                
+
     def normalize(self):
         for c in range (self.depth):
             N=self.width * self.height
             u=0
-            sig=0	
+            sig=0
             for i in range(self.height):
                 for j in range(self.width):
                     u=u+self.matrixPix[i][j][c]
@@ -162,11 +162,11 @@ class Image :
                                     for l in range(self.depth):
                                         if (i+m < self.height and j+n < self.width):
                                             s = s + self.matrixPix[i+m][j+n][l]*kernel.k[c][m][n][l]
-                            if (s<0):			
+                            if (s<0):
                                 s=0
                             matS[i][j][c] = s
         self.matrixPix = matS
-        self.depth = kernel.canal	
+        self.depth = kernel.canal
         return 0
 
     def maxPool(self,stride):
@@ -182,7 +182,7 @@ class Image :
                             matS[i//stride][j//stride][c] = maxi
         self.matrixPix = matS
         self.height = self.height//stride
-        self.width = self.width//stride	
+        self.width = self.width//stride
         return 0
 
 
@@ -199,7 +199,7 @@ class Image :
             img.write("\n")
         img.close()
         return 0;
-    
+
     def genZero(self,width,height,depth,max,format):
         self.cleanUp()
         line=[]
@@ -217,7 +217,7 @@ class Image :
         self.depth = depth
         self.lumMax=max
         self.format=format
-        
+
     def reshapeToVector(self):
         Vector = []
         for i in range(self.height):
@@ -228,7 +228,7 @@ class Image :
         self.height=self.height*self.width*self.depth
         self.width=0
         self.depth=0
-    
+
     def softMax(self):
         sexp=0
         for i in range(self.height):
@@ -242,7 +242,7 @@ class Image :
     def multiplyMat(self,mat):
         A=np.array(self.matrix)*mat
         return A
-        
+
     def print_matrixPix(self):
         A=np.array(self.matrixPix)
         print(A.dtype)
@@ -258,18 +258,18 @@ def load_bin(self,FileName):
         self.label=byte
         for c in range(3):
             for i in range(1024):
-                byte = f.read(1)   
-                    mat[c].append(byte)
+                byte = f.read(1)
+                mat[c].append(byte)
     for n in range(3):
         mat[n]=np.array(mat[c])
-    
-    
 
 
-#img=Image()
-#img.load_pgm("grosTest.pgm","P3")
+
+
+img=Image()
+img.load_pgm("grosTest.pgm","P3")
 #img.generate_Random(16,16,3,255,"P3")
-# print(img.matrixPix)
+print(img.matrixPix)
 # img.convertNumpy()
 #img.write_pgm("grosTest.pgm")
 # img.centered_crop(12,12)
@@ -284,5 +284,3 @@ def load_bin(self,FileName):
 # img.reshapeToVector()
 # img.softMax()
 # print(img.matrixPix)
-
-
