@@ -41,7 +41,6 @@ class kernel :
 
 class Image :
     def __init__(self):
-        self.matrixPix=[]
         self.height = 0
         self.width = 0
         self.depth = 0
@@ -50,7 +49,6 @@ class Image :
         self.label=""
 
     def cleanUp(self):
-        self.matrixPix=[]
         self.height=0
         self.width=0
         self.depth = 0
@@ -63,7 +61,7 @@ class Image :
         self.depth = image.depth
         self.format = image.format
         self.lumMax = image.lumMax
-        self.matrixPix = copy.deepcopy(image.matrixPix)
+        self.matrixPix = image.matrixPix
         self.label = image.label
 
     def load_pgm(self,FileName,format):
@@ -117,20 +115,12 @@ class Image :
         if((newWidth>self.width) or (newHeight>self.height)):
             return -1
 
-        xmargin= (self.width-newWidth)//2
-        ymargin = (self.height-newHeight)//2
-
-
-        #crop the up & bottom lines
-        for i in range(ymargin):
-            self.matrixPix.pop(0)
-            self.matrixPix.pop(len(self.matrixPix)-1)
-
-        for i in range(0,newHeight,1):
-            for j in range(xmargin):
-                self.matrixPix[i].pop(0)
-                self.matrixPix[i].pop(len(self.matrixPix[i])-1)
-
+        wmargin= (self.width-newWidth)//2
+        hmargin = (self.height-newHeight)//2
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(wmargin)],2)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(self.width-wmargin,self.width,1)],2)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(hmargin)],1)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(self.height-hmargin,self.height,1)],1)
         self.height=newHeight
         self.width=newWidth
         return 0
@@ -202,7 +192,6 @@ class Image :
         img.close()
         return 0;
 
-
     def genZero(self,width,height,color,max,format):
         self.cleanUp()
         pixel=[]
@@ -216,15 +205,10 @@ class Image :
         self.format=format
 
     def reshapeToVector(self):
-        Vector = []
-        for c in range(self.color):
-                for i in range(self.height):
-                    for j in range(self.width):
-                        Vector.append(self.matrixPix[c][i][j])
-        self.matrixPix = Vector
-        self.height=self.height*self.width*self.color
+        self.matrixPix =self.matrixPix.reshape(self.height*self.width*self.depth)
+        self.height=self.height*self.width*self.depth
         self.width=0
-        self.color=0
+        self.depth=0
 
     def softMax(self):
         sexp=0
@@ -270,20 +254,21 @@ img=Image()
 img.load_bin("data_batch_1.bin")
 #print(img.matrixPix)
 # img.convertNumpy()
-#img.format="P3"
-#img.lumMax=255
-#img.write_pgm("test_bin")
-#print(img.label)
-# img.centered_crop(12,12)
-# img.write_pgm("grosTestCropped.pgm")
-# img.normalize()
+img.format="P3"
+img.lumMax=255
+img.write_pgm("test_bin")
+print(img.label)
+img.centered_crop(24,24)
+img.print_matrixPix()
+img.write_pgm("TestCropped.pgm")
+#img.normalize()
+#img.write_pgm("TestNormalized.pgm")
 # ker=kernel(3,3,16,3)
 # ker.generate_Random()
 # #ker.print_ker()
 # img.convolutionReLU(ker)
 # #img.write_pgm("convol.pgm")
-# img.genZero(16,16,3,255,"P3")
 # img.maxPool(3)
 # img.reshapeToVector()
 # img.softMax()
-print(img.matrixPix)
+# print(img.matrixPix)
