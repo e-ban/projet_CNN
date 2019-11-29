@@ -202,34 +202,29 @@ class Image :
         img.close()
         return 0;
 
-    def genZero(self,width,height,depth,max,format):
+
+    def genZero(self,width,height,color,max,format):
         self.cleanUp()
-        line=[]
         pixel=[]
-        for i in range(height):
-            for j in range(width):
-                pixel =[]
-                for c in range(depth):
-                    pixel.append(0)
-                line.append(pixel)
-            self.matrixPix.append(line)
-            line=[]
+        for c in range(color*width*height):
+            pixel.append(0)
+        self.matrixPix = np.array(pixel).reshape(color,height,width)
         self.height=height
         self.width=width
-        self.depth = depth
+        self.color = color
         self.lumMax=max
         self.format=format
 
     def reshapeToVector(self):
         Vector = []
-        for i in range(self.height):
-                for j in range(self.width):
-                    for c in range(self.depth):
-                        Vector.append(self.matrixPix[i][j][c])
+        for c in range(self.color):
+                for i in range(self.height):
+                    for j in range(self.width):
+                        Vector.append(self.matrixPix[c][i][j])
         self.matrixPix = Vector
-        self.height=self.height*self.width*self.depth
+        self.height=self.height*self.width*self.color
         self.width=0
-        self.depth=0
+        self.color=0
 
     def softMax(self):
         sexp=0
@@ -275,10 +270,10 @@ img=Image()
 img.load_bin("data_batch_1.bin")
 #print(img.matrixPix)
 # img.convertNumpy()
-img.format="P3"
-img.lumMax=255
-img.write_pgm("test_bin")
-print(img.label)
+#img.format="P3"
+#img.lumMax=255
+#img.write_pgm("test_bin")
+#print(img.label)
 # img.centered_crop(12,12)
 # img.write_pgm("grosTestCropped.pgm")
 # img.normalize()
@@ -287,7 +282,8 @@ print(img.label)
 # #ker.print_ker()
 # img.convolutionReLU(ker)
 # #img.write_pgm("convol.pgm")
+# img.genZero(16,16,3,255,"P3")
 # img.maxPool(3)
 # img.reshapeToVector()
 # img.softMax()
-# print(img.matrixPix)
+print(img.matrixPix)
