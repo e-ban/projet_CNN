@@ -2,15 +2,15 @@
 import random as rd
 import numpy as np
 import math
-import struct
 import pickle as pckl
+
 class kernel :
     def __init__(self,h,w,c,l):
         self.k =[]
         self.height =h
         self.width = w
         self.canal = c
-        self.depth = l
+        self.color = l
 
 
     def generate_Random(self):
@@ -22,7 +22,7 @@ class kernel :
             for i in range(self.height):
                 for j in range(self.width):
                     pixel =[]
-                    for l in range(self.depth):
+                    for l in range(self.color):
                         pixel.append(rd.random())
                     line.append(pixel)
                 layer.append(line)
@@ -44,7 +44,7 @@ class Image :
         self.matrixPix=[]
         self.height = 0
         self.width = 0
-        self.depth = 0
+        self.color = 0
         self.format=""
         self.lumMax=0
         self.label=""
@@ -53,14 +53,14 @@ class Image :
         self.matrixPix=[]
         self.height=0
         self.width=0
-        self.depth = 0
+        self.color = 0
         self.format=""
         self.label=""
 
     def copy(self,image):
         self.height = image.height
         self.width = image.width
-        self.depth = image.depth
+        self.color = image.color
         self.format = image.format
         self.lumMax = image.lumMax
         self.matrixPix = copy.deepcopy(image.matrixPix)
@@ -136,7 +136,7 @@ class Image :
         return 0
 
     def normalize(self):
-        for c in range (self.depth):
+        for c in range (self.color):
             N=self.width * self.height
             u=0
             sig=0
@@ -161,21 +161,21 @@ class Image :
                             s = 0
                             for m in range(kernel.height):
                                 for n in range(kernel.width):
-                                    for l in range(self.depth):
+                                    for l in range(self.color):
                                         if (i+m < self.height and j+n < self.width):
                                             s = s + self.matrixPix[i+m][j+n][l]*kernel.k[c][m][n][l]
                             if (s<0):
                                 s=0
                             matS[i][j][c] = s
         self.matrixPix = matS
-        self.depth = kernel.canal
+        self.color = kernel.canal
         return 0
 
     def maxPool(self,stride):
-        matS = [[[0 for canal in range (self.depth)] for col in range(self.width//stride)] for line in range(self.height//stride)]
+        matS = [[[0 for canal in range (self.color)] for col in range(self.width//stride)] for line in range(self.height//stride)]
         for i in range(0,self.height,stride):
                     for j in range(0,self.width,stride):
-                        for c in range(self.depth):
+                        for c in range(self.color):
                             maxi=0
                             for m in range(stride):
                                 for n in range(stride):
@@ -202,34 +202,18 @@ class Image :
         img.close()
         return 0;
 
-    def genZero(self,width,height,depth,max,format):
-        self.cleanUp()
-        line=[]
-        pixel=[]
-        for i in range(height):
-            for j in range(width):
-                pixel =[]
-                for c in range(depth):
-                    pixel.append(0)
-                line.append(pixel)
-            self.matrixPix.append(line)
-            line=[]
-        self.height=height
-        self.width=width
-        self.depth = depth
-        self.lumMax=max
-        self.format=format
+
 
     def reshapeToVector(self):
         Vector = []
         for i in range(self.height):
                 for j in range(self.width):
-                    for c in range(self.depth):
+                    for c in range(self.color):
                         Vector.append(self.matrixPix[i][j][c])
         self.matrixPix = Vector
-        self.height=self.height*self.width*self.depth
+        self.height=self.height*self.width*self.color
         self.width=0
-        self.depth=0
+        self.color=0
 
     def softMax(self):
         sexp=0
@@ -242,7 +226,7 @@ class Image :
         return 0
 
     def multiplyMat(self,mat):
-        A=np.array(self.matrix)*mat
+        A=self.matrix*mat
         return A
 
     def print_matrixPix(self):
@@ -251,34 +235,29 @@ class Image :
         print(A.size)
         print(A)
 
-
-    def load_bin(self,FileName):
-        self.cleanUp()  #reset all fields to initial values
-        mat=[[],[],[]]
-        with open(FileName, "rb") as f:
-            byte=struct.unpack('B',f.read(1))
-            self.label=byte
-            for c in range(3):
-                byte=struct.unpack('1024B',f.read(1024))
+def load_bin(self,FileName):
+    self.cleanUp()  #reset all fields to initial values
+    cloop=0
+    mat=[[],[],[]]
+    with open("FileName", "rb") as f:
+        byte = f.read(1)
+        self.label=byte
+        for c in range(3):
+            for i in range(1024):
+                byte = f.read(1)
                 mat[c].append(byte)
-        for n in range(3):
-            mat[n]=np.array(mat[n]).reshape(32,32)
-        self.matrixPix=mat
-        self.height=32
-        self.width=32
-        self.color=3
+    for n in range(3):
+        mat[n]=np.array(mat[c])
+
+
 
 
 img=Image()
-#img.load_pgm("grosTest.pgm","P3")
+img.load_pgm("grosTest.pgm","P3")
 #img.generate_Random(16,16,3,255,"P3")
-img.load_bin("data_batch_1.bin")
-#print(img.matrixPix)
+print(img.matrixPix)
 # img.convertNumpy()
-img.format="P3"
-img.lumMax=255
-img.write_pgm("test_bin")
-print(img.label)
+#img.write_pgm("grosTest.pgm")
 # img.centered_crop(12,12)
 # img.write_pgm("grosTestCropped.pgm")
 # img.normalize()
