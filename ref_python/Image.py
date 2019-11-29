@@ -2,6 +2,7 @@
 import random as rd
 import numpy as np
 import math
+import struct
 import pickle as pckl
 class kernel :
     def __init__(self,h,w,c,l):
@@ -195,7 +196,7 @@ class Image :
         for i in range(self.height):
             for j in range(self.width):
                 for c in range(3):
-                    img.write(str(self.matrixPix[i][j][c])+" ")
+                    img.write(str(self.matrixPix[c][i][j])+" ")
             img.write("\n")
         img.close()
         return 0;
@@ -249,29 +250,34 @@ class Image :
         print(A.size)
         print(A)
 
-def load_bin(self,FileName):
-    self.cleanUp()  #reset all fields to initial values
-    cloop=0
-    mat=[[],[],[]]
-    with open("FileName", "rb") as f:
-        byte = f.read(1)
-        self.label=byte
-        for c in range(3):
-            for i in range(1024):
-                byte = f.read(1)
+        
+    def load_bin(self,FileName):
+        self.cleanUp()  #reset all fields to initial values
+        mat=[[],[],[]]
+        with open(FileName, "rb") as f:
+            byte=struct.unpack('B',f.read(1))
+            self.label=byte
+            for c in range(3):
+                byte=struct.unpack('1024B',f.read(1024))
                 mat[c].append(byte)
-    for n in range(3):
-        mat[n]=np.array(mat[c])
-
-
+        for n in range(3):
+            mat[n]=np.array(mat[n]).reshape(32,32)
+        self.matrixPix=mat
+        self.height=32
+        self.width=32
+        self.color=3
 
 
 img=Image()
-img.load_pgm("grosTest.pgm","P3")
+#img.load_pgm("grosTest.pgm","P3")
 #img.generate_Random(16,16,3,255,"P3")
-print(img.matrixPix)
+img.load_bin("data_batch_1.bin")
+#print(img.matrixPix)
 # img.convertNumpy()
-#img.write_pgm("grosTest.pgm")
+img.format="P3"
+img.lumMax=255
+img.write_pgm("test_bin")
+print(img.label)
 # img.centered_crop(12,12)
 # img.write_pgm("grosTestCropped.pgm")
 # img.normalize()
