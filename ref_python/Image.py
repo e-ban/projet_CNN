@@ -10,7 +10,7 @@ class kernel :
         self.height =h
         self.width = w
         self.canal = c
-        self.depth = l
+        self.color = l
 
 
     def generate_Random(self):
@@ -22,7 +22,7 @@ class kernel :
             for i in range(self.height):
                 for j in range(self.width):
                     pixel =[]
-                    for l in range(self.depth):
+                    for l in range(self.color):
                         pixel.append(rd.random())
                     line.append(pixel)
                 layer.append(line)
@@ -40,25 +40,26 @@ class kernel :
 
 
 class Image :
-    def __init__(self):
+    def __init__(self,coeffFile):
         self.height = 0
         self.width = 0
-        self.depth = 0
+        self.canal = 0
         self.format=""
         self.lumMax=0
         self.label=""
+        self.coeffFile=coeffFile
 
     def cleanUp(self):
         self.height=0
         self.width=0
-        self.depth = 0
+        self.canal = 0
         self.format=""
         self.label=""
 
     def copy(self,image):
         self.height = image.height
         self.width = image.width
-        self.depth = image.depth
+        self.canal = image.canal
         self.format = image.format
         self.lumMax = image.lumMax
         self.matrixPix = image.matrixPix
@@ -71,9 +72,9 @@ class Image :
 
         if format=="P3":
 
-            self.color = 3
+            self.canal = 3
         else :
-            self.color = 1
+            self.canal = 1
 
         line=img.readline()
 
@@ -81,17 +82,17 @@ class Image :
 
         (self.width,self.height) = [int(i) for i in line.split()]
         self.lumMax=img.readline()
-        mat = [[] for c in range(self.color)]
+        mat = [[] for c in range(self.canal)]
         values = img.readlines()
         count=1
         for i in range(len(values)):
             for c in values[i].split():
-                if(count==self.color):
+                if(count==self.canal):
                     count=1
                 else :
                     count=count+1
                 mat[count-1].append(int(c))
-        for col in range(self.color):
+        for col in range(self.canal):
             mat[col]=np.array(mat[col]).reshape(self.height,self.width)
         self.matrixPix=mat
         img.close()
@@ -99,15 +100,15 @@ class Image :
 
 
 
-    def generate_Random(self,width,height,color,max,format):
+    def generate_Random(self,width,height,canal,max,format):
         self.cleanUp()
         pixel=[]
-        for c in range(color*width*height):
+        for c in range(canal*width*height):
             pixel.append(int(max*(rd.random())))
-        self.matrixPix = np.array(pixel).reshape(color,height,width)
+        self.matrixPix = np.array(pixel).reshape(canal,height,width)
         self.height=height
         self.width=width
-        self.color = color
+        self.canal = canal
         self.lumMax=max
         self.format=format
 
@@ -126,21 +127,26 @@ class Image :
         return 0
 
     def normalize(self):
-        for c in range (self.depth):
+        self.matrixPix=self.matrixPix.astype(np.float64)
+
+        for c in range (self.canal):
             N=self.width * self.height
             u=0
             sig=0
             for i in range(self.height):
                 for j in range(self.width):
-                    u=u+self.matrixPix[i][j][c]
+                    u=u+self.matrixPix[c,i,j]
             u=u/N
-            for i in range(self.height):
-                for j in range(self.width):
-                    sig=sig+(self.matrixPix[i][j][c]-u)**2
+            for k in range(self.height):
+                for l in range(self.width):
+                    sig=sig+(self.matrixPix[c,k,l]-u)**2
             sig=math.sqrt(sig/N)
-            for i in range(self.height):
-                for j in range(self.width):
-                    self.matrixPix[i][j][c] = (self.matrixPix[i][j][c]-u)/max(sig,1/(math.sqrt(N)))
+            div = max(sig,1/(math.sqrt(N)))
+
+            for m in range(self.height):
+                for n in range(self.width):
+                    self.matrixPix[c,m,n] = (self.matrixPix[c,m,n]-u)/div
+
         return 0
 
     def convolutionReLU(self,kernel):
@@ -151,21 +157,21 @@ class Image :
                             s = 0
                             for m in range(kernel.height):
                                 for n in range(kernel.width):
-                                    for l in range(self.depth):
+                                    for l in range(self.canal):
                                         if (i+m < self.height and j+n < self.width):
                                             s = s + self.matrixPix[i+m][j+n][l]*kernel.k[c][m][n][l]
                             if (s<0):
                                 s=0
                             matS[i][j][c] = s
         self.matrixPix = matS
-        self.depth = kernel.canal
+        self.canal = kernel.canal
         return 0
 
     def maxPool(self,stride):
-        matS = [[[0 for canal in range (self.depth)] for col in range(self.width//stride)] for line in range(self.height//stride)]
+        matS = [[[0 for canal in range (self.canal)] for col in range(self.width//stride)] for line in range(self.height//stride)]
         for i in range(0,self.height,stride):
                     for j in range(0,self.width,stride):
-                        for c in range(self.depth):
+                        for c in range(self.canal):
                             maxi=0
                             for m in range(stride):
                                 for n in range(stride):
@@ -192,23 +198,23 @@ class Image :
         img.close()
         return 0;
 
-    def genZero(self,width,height,color,max,format):
+    def genZero(self,width,height,canal,max,format):
         self.cleanUp()
         pixel=[]
-        for c in range(color*width*height):
+        for c in range(canal*width*height):
             pixel.append(0)
-        self.matrixPix = np.array(pixel).reshape(color,height,width)
+        self.matrixPix = np.array(pixel).reshape(canal,height,width)
         self.height=height
         self.width=width
-        self.color = color
+        self.canal = canal
         self.lumMax=max
         self.format=format
 
     def reshapeToVector(self):
-        self.matrixPix =self.matrixPix.reshape(self.height*self.width*self.depth)
-        self.height=self.height*self.width*self.depth
+        self.matrixPix =self.matrixPix.reshape(self.height*self.width*self.canal)
+        self.height=self.height*self.width*self.canal
         self.width=0
-        self.depth=0
+        self.canal=0
 
     def softMax(self):
         sexp=0
@@ -245,10 +251,10 @@ class Image :
         self.matrixPix=mat
         self.height=32
         self.width=32
-        self.color=3
+        self.canal=3
 
 
-img=Image()
+img=Image("CNN_coeff_3x3.txt")
 #img.load_pgm("grosTest.pgm","P3")
 #img.generate_Random(16,16,3,255,"P3")
 img.load_bin("data_batch_1.bin")
@@ -259,10 +265,13 @@ img.lumMax=255
 img.write_pgm("test_bin")
 print(img.label)
 img.centered_crop(24,24)
+print("\nCentered crop\n")
 img.print_matrixPix()
 img.write_pgm("TestCropped.pgm")
-#img.normalize()
-#img.write_pgm("TestNormalized.pgm")
+img.normalize()
+print("\nNormalized\n")
+img.print_matrixPix()
+img.write_pgm("TestNormalized.pgm")
 # ker=kernel(3,3,16,3)
 # ker.generate_Random()
 # #ker.print_ker()
