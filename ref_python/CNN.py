@@ -5,43 +5,8 @@ import math
 import struct
 
 
-class kernel :
-    def __init__(self,h,w,c,l):
-        self.k =[]
-        self.height =h
-        self.width = w
-        self.canal = c
-        self.color = l
-
-
-    def generate_Random(self):
-        line=[]
-        pixel=[]
-        layer=[]
-        temp=[]
-        for c in range (self.canal):
-            for i in range(self.height):
-                for j in range(self.width):
-                    pixel =[]
-                    for l in range(self.color):
-                        pixel.append(rd.random())
-                    line.append(pixel)
-                layer.append(line)
-                line=[]
-            temp.append(layer)
-            layer=[]
-        temp = np.array()
-        self.k = temp
-        return 0
-
-    def print_ker(self):
-        for line in self.k:
-            print(line)
-            print("\n")
-
-
 class CNN :
-    def __init__(self,coeffDico):
+    def __init__(self,coeffDico,dicoLabelFile):
         self.height = 0
         self.width = 0
         self.canal = 0
@@ -49,6 +14,7 @@ class CNN :
         self.lumMax=0
         self.label=""
         self.coeffDico=coeffDico
+        self.dicoLabel=self.load_labels(dicoLabelFile)
 
     def cleanUp(self):
         self.height=0
@@ -65,6 +31,15 @@ class CNN :
         self.lumMax = image.lumMax
         self.matrixPix = image.matrixPix
         self.label = image.label
+
+    def load_labels(self,labelsFile):
+        with open(labelsFile,"r") as f:
+            dicolabel=[]
+            line=f.readline()
+            while len(line)!=0:
+                dicolabel.append(line[:-1])
+                line=f.readline()
+        return(dicolabel)
 
     def load_pgm(self,FileName,format):
         self.cleanUp()  #reset all fields to initial values
@@ -83,21 +58,13 @@ class CNN :
 
         (self.width,self.height) = [int(i) for i in line.split()]
         self.lumMax=img.readline()
-        mat = [[] for c in range(self.canal)]
+        mat = []
         values = img.readlines()
-        count=1
         for i in range(len(values)):
-            for c in values[i].split():
-                if(count==self.canal):
-                    count=1
-                else :
-                    count=count+1
-                mat[count-1].append(int(c))
-        for col in range(self.canal):
-            mat[col]=np.array(mat[col]).reshape(self.height,self.width)
-        self.matrixPix=mat
+            mat.append([int(c) for c in values[i].split()])
+        A = np.array(mat)
+        self.matrixPix=A.reshape(self.height,self.width,self.canal)
         img.close()
-
 
 
 
@@ -106,7 +73,7 @@ class CNN :
         pixel=[]
         for c in range(canal*width*height):
             pixel.append(int(max*(rd.random())))
-        self.matrixPix = np.array(pixel).reshape(canal,height,width)
+        self.matrixPix = np.array(pixel).reshape(height,width,canal)
         self.height=height
         self.width=width
         self.canal = canal
@@ -119,10 +86,10 @@ class CNN :
 
         wmargin= (self.width-newWidth)//2
         hmargin = (self.height-newHeight)//2
-        self.matrixPix = np.delete(self.matrixPix,[i for i in range(wmargin)],2)
-        self.matrixPix = np.delete(self.matrixPix,[i for i in range(self.width-wmargin,self.width,1)],2)
-        self.matrixPix = np.delete(self.matrixPix,[i for i in range(hmargin)],1)
-        self.matrixPix = np.delete(self.matrixPix,[i for i in range(self.height-hmargin,self.height,1)],1)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(wmargin)],1)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(self.width-wmargin,self.width,1)],1)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(hmargin)],0)
+        self.matrixPix = np.delete(self.matrixPix,[i for i in range(self.height-hmargin,self.height,1)],0)
         self.height=newHeight
         self.width=newWidth
         return 0
@@ -136,52 +103,60 @@ class CNN :
             sig=0
             for i in range(self.height):
                 for j in range(self.width):
-                    u=u+self.matrixPix[c,i,j]
+                    u=u+self.matrixPix[i,j,c]
             u=u/N
             for k in range(self.height):
                 for l in range(self.width):
-                    sig=sig+(self.matrixPix[c,k,l]-u)**2
+                    sig=sig+(self.matrixPix[k,l,c]-u)**2
             sig=math.sqrt(sig/N)
             div = max(sig,1/(math.sqrt(N)))
 
             for m in range(self.height):
                 for n in range(self.width):
-                    self.matrixPix[c,m,n] = (self.matrixPix[c,m,n]-u)/div
+                    self.matrixPix[m,n,c] = (self.matrixPix[m,n,c]-u)/div
 
         return 0
 
-    def convolutionReLU(self,kernel):
-        matS = [[[0 for canal in range (kernel.canal)] for col in range(self.width)] for p in range(self.height)]
+    def convolutionReLU(self,coeffKey):
+        kernel=self.coeffDico[coeffKey+"/weights"]
+        biasesVect = self.coeffDico[coeffKey+"/biases"]
+        matS = np.array([[[0 for canal in range (np.shape(kernel)[3])] for col in range(self.width)] for p in range(self.height)],dtype=np.float64)
         for i in range(self.height):
                     for j in range(self.width):
-                        for c in range(kernel.canal):
+                        for c in range((np.shape(kernel)[3])):#depth of kernel
                             s = 0
-                            for m in range(kernel.height):
-                                for n in range(kernel.width):
-                                    for l in range(self.canal):
+                            for m in range((np.shape(kernel)[0])): #height of kernel
+                                for n in range((np.shape(kernel)[1])):#width of kernel
+                                    for l in range(self.canal): #colors
                                         if (i+m < self.height and j+n < self.width):
-                                            s = s + self.matrixPix[i+m][j+n][l]*kernel.k[c][m][n][l]
+                                            s = s + self.matrixPix[i+m,j+n,l]*kernel[m,n,l,c] + biasesVect[c]
                             if (s<0):
                                 s=0
                             matS[i][j][c] = s
         self.matrixPix = matS
-        self.canal = kernel.canal
+        self.canal = (np.shape(kernel)[3])
         return 0
 
-    def maxPool(self,stride):
-        matS = [[[0 for canal in range (self.canal)] for col in range(self.width//stride)] for line in range(self.height//stride)]
-        for i in range(0,self.height,stride):
-                    for j in range(0,self.width,stride):
+    def maxPool(self,size,stride):
+        k=1
+        matS = [[[0 for canal in range (self.canal)] for col in range(self.width//stride[1])] for line in range(self.height//stride[1])]
+        for i in range(stride[0]-size[0],self.height+size[0]-stride[0],k*stride[0]):
+                    for j in range(stride[1]-size[1],self.width+size[1]-stride[1],stride[1]):
                         for c in range(self.canal):
                             maxi=0
-                            for m in range(stride):
-                                for n in range(stride):
-                                    if(maxi < self.matrixPix[i+m][j+n][c]):
+                            for m in range(0,size[0]):
+                                for n in range(0,size[1]):
+                                    if(i+m<0 or j+n<0 or i+m>=self.height or j+n>=self.width):
+                                        if maxi<0:
+                                            maxi=0
+                                    elif(maxi < self.matrixPix[i+m][j+n][c]):
                                         maxi = self.matrixPix[i+m][j+n][c]
-                            matS[i//stride][j//stride][c] = maxi
-        self.matrixPix = matS
-        self.height = self.height//stride
-        self.width = self.width//stride
+                            matS[i//stride[0]][j//stride[1]][c] = maxi
+                    if (i == self.height+size[0]-stride[0]-1):
+                        k=-1*k
+        self.matrixPix = np.array(matS,dtype=np.float64)
+        self.height = self.height//stride[0]
+        self.width = self.width//stride[1]
         return 0
 
 
@@ -193,8 +168,8 @@ class CNN :
         img.write(str(self.lumMax)+"\n")
         for i in range(self.height):
             for j in range(self.width):
-                for c in range(3):
-                    img.write(str(self.matrixPix[c][i][j])+" ")
+                for c in range(self.canal):
+                    img.write(str(int(self.matrixPix[i,j,c]))+" ")
             img.write("\n")
         img.close()
         return 0;
@@ -227,21 +202,24 @@ class CNN :
             self.matrixPix[i] = self.matrixPix[i]/sexp
         return 0
 
-    def multiplyMat(self,mat):
-        A=np.array(self.matrix)*mat
+    def multiplyMat(self,dicoKey):
+        B=np.array([[self.coeffDico[dicoKey+"/weights"][i,j] for i in range(180)] for j in range(10)])
+        C=np.array([self.coeffDico[dicoKey+"/biases"][i] for i in range(10)])
+        A=np.matmul(B,self.matrixPix)+C
         return A
 
     def print_matrixPix(self):
         A=self.matrixPix
         print(A.dtype)
-        print(A.size)
+        print(A.shape)
         print(A)
 
 
-    def load_bin(self,FileName):
+    def load_bin(self,FileName,shift):
         self.cleanUp()  #reset all fields to initial values
         mat=[[],[],[]]
         with open(FileName, "rb") as f:
+            f.read(shift*3073)
             byte=struct.unpack('B',f.read(1))
             self.label=byte
             for c in range(3):
@@ -249,40 +227,44 @@ class CNN :
                 mat[c].append(byte)
         for n in range(3):
             mat[n]=np.array(mat[n]).reshape(32,32)
-        self.matrixPix=mat
         self.height=32
         self.width=32
         self.canal=3
+        self.matrixPix = np.array([[[mat[c][i,j] for c in range(3)] for j in range(32) ] for i in range(32)],dtype=np.float64)
 
 
 
-if __name__="__main__":
+
+if __name__=="__main__":
     import dicoCoeff
     d = dicoCoeff.DicoCoeff("CNN_coeff_3x3.txt")
-    cnn=CNN(d.dico)
-    #cnn.load_pgm("grosTest.pgm","P3")
-    #cnn.generate_Random(16,16,3,255,"P3")
-    cnn.load_bin("data_batch_1.bin")
-    #print(cnn.matrixPix)
-    # cnn.convertNumpy()
-    cnn.format="P3"
-    cnn.lumMax=255
-    cnn.write_pgm("test_bin")
-    print(cnn.label)
-    cnn.centered_crop(24,24)
-    print("\nCentered crop\n")
-    cnn.print_matrixPix()
-    cnn.write_pgm("TestCropped.pgm")
-    cnn.normalize()
-    print("\nNormalized\n")
-    cnn.print_matrixPix()
-    cnn.write_pgm("TestNormalized.pgm")
-    # ker=kernel(3,3,16,3)
-    # ker.generate_Random()
-    # #ker.print_ker()
-    # cnn.convolutionReLU("conv1")
-    # #cnn.write_pgm("convol.pgm")
-    # cnn.maxPool(3)
-    # cnn.reshapeToVector()
-    # cnn.softMax()
-    # print(cnn.matrixPix)
+    cnn=CNN(d.dico,"batches.meta.txt")
+    #cnn.generate_Random(32,32,3,255,"P3")
+    success=0
+    for shift in range(10000):
+        cnn.load_bin("data_batch_1.bin",shift)
+        cnn.format="P3"
+        cnn.lumMax=255
+        #cnn.write_pgm("test_bin"+str(shift)+".pgm")
+        #print("\nImage : ")
+        #print(cnn.label)
+        #print("\n")
+        cnn.centered_crop(24,24)
+        cnn.normalize()
+        cnn.convolutionReLU("conv1")
+        cnn.maxPool([3,3],[2,2])
+        cnn.convolutionReLU("conv2")
+        cnn.maxPool([3,3],[2,2])
+        cnn.convolutionReLU("conv3")
+        cnn.maxPool([3,3],[2,2])
+        cnn.reshapeToVector()
+        Result=cnn.multiplyMat("local3")
+
+        if(np.argmax(Result)==cnn.label):
+            print("CNN : Success")
+            print(cnn.dicoLabel)
+            print(Result)
+            success = success+1
+        else :
+            print("CNN : Fail")
+        print("Synthesis : "+str(shift+1)+" images treated, "+str(success)+" success, "+str(shift-success+1)+" failures\n")

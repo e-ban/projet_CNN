@@ -113,3 +113,5 @@ if __name__== "__main__":
     print(dicoCoeff)
     print("\n")
     print(dicoCoeff.keys())
+    mat=dicoCoeff["conv1/weights"]
+    print(np.shape(mat))
