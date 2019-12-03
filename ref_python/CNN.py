@@ -13,6 +13,7 @@ class CNN :
         self.format=""
         self.lumMax=0
         self.label=""
+        self.matrixPix=[]
         self.coeffDico=coeffDico
         self.dicoLabel=self.load_labels(dicoLabelFile)
 
@@ -22,6 +23,8 @@ class CNN :
         self.canal = 0
         self.format=""
         self.label=""
+        self.matrixPix=[]
+
 
     def copy(self,image):
         self.height = image.height
@@ -125,10 +128,12 @@ class CNN :
                     for j in range(self.width):
                         for c in range((np.shape(kernel)[3])):#depth of kernel
                             s = 0
-                            for m in range((np.shape(kernel)[0])): #height of kernel
-                                for n in range((np.shape(kernel)[1])):#width of kernel
+                            h_ker=np.shape(kernel)[0]#height of kernel
+                            w_ker=np.shape(kernel)[1]#width of kernel
+                            for m in range(-(h_ker-1)//2,(h_ker-1)//2):
+                                for n in range(-(w_ker-1)//2,(w_ker-1)//2):
                                     for l in range(self.canal): #colors
-                                        if (i+m < self.height and j+n < self.width):
+                                        if (i+m < self.height and j+n < self.width and i+m>=0 and j+n>=0):
                                             s = s + self.matrixPix[i+m,j+n,l]*kernel[m,n,l,c] + biasesVect[c]
                             if (s<0):
                                 s=0
@@ -169,7 +174,7 @@ class CNN :
         for i in range(self.height):
             for j in range(self.width):
                 for c in range(self.canal):
-                    img.write(str(int(self.matrixPix[i,j,c]))+" ")
+                    img.write(str(self.matrixPix[i,j,c])+" ")
             img.write("\n")
         img.close()
         return 0;
@@ -194,19 +199,23 @@ class CNN :
 
     def softMax(self):
         sexp=0
+        result=[]
         for i in range(self.height):
             exp=math.exp(self.matrixPix[i])
             sexp = exp + sexp
-            self.matrixPix[i] = exp
+            result.append(exp)
         for i in range(self.height):
-            self.matrixPix[i] = self.matrixPix[i]/sexp
-        return 0
+            result[i] = result[i]/sexp
+        return result
 
     def multiplyMat(self,dicoKey):
         B=np.array([[self.coeffDico[dicoKey+"/weights"][i,j] for i in range(180)] for j in range(10)])
         C=np.array([self.coeffDico[dicoKey+"/biases"][i] for i in range(10)])
         A=np.matmul(B,self.matrixPix)+C
-        return A
+        self.height=A.shape[0]
+        self.width=0
+        self.canal=0
+        self.matrixPix=A.reshape(self.height)
 
     def print_matrixPix(self):
         A=self.matrixPix
@@ -241,8 +250,9 @@ if __name__=="__main__":
     cnn=CNN(d.dico,"batches.meta.txt")
     #cnn.generate_Random(32,32,3,255,"P3")
     success=0
-    for shift in range(10000):
-        cnn.load_bin("data_batch_1.bin",shift)
+    for shift in range(1):
+        cnn.cleanUp()
+        cnn.load_bin("data_batch_1.bin",4000)
         cnn.format="P3"
         cnn.lumMax=255
         #cnn.write_pgm("test_bin"+str(shift)+".pgm")
@@ -250,21 +260,35 @@ if __name__=="__main__":
         #print(cnn.label)
         #print("\n")
         cnn.centered_crop(24,24)
+        cnn.write_pgm("crop_"+str(shift)+".pgm")
         cnn.normalize()
+        cnn.write_pgm("normal_"+str(shift)+".pgm")
         cnn.convolutionReLU("conv1")
+        cnn.write_pgm("conv1_"+str(shift)+".pgm")
         cnn.maxPool([3,3],[2,2])
+        cnn.write_pgm("max1_"+str(shift)+".pgm")
         cnn.convolutionReLU("conv2")
+        cnn.write_pgm("conv2_"+str(shift)+".pgm")
         cnn.maxPool([3,3],[2,2])
+        cnn.write_pgm("max2_"+str(shift)+".pgm")
         cnn.convolutionReLU("conv3")
+        cnn.write_pgm("conv3_"+str(shift)+".pgm")
         cnn.maxPool([3,3],[2,2])
+        cnn.write_pgm("max3_"+str(shift)+".pgm")
         cnn.reshapeToVector()
-        Result=cnn.multiplyMat("local3")
+        cnn.multiplyMat("local3")
+        cnn.print_matrixPix()
+        Result=cnn.softMax()
 
         if(np.argmax(Result)==cnn.label):
             print("CNN : Success")
+            print(cnn.dicoLabel[int(''.join(map(str,cnn.label))) ])
             print(cnn.dicoLabel)
             print(Result)
             success = success+1
         else :
             print("CNN : Fail")
+            print(cnn.dicoLabel[int(''.join(map(str,cnn.label)))])
+            print(cnn.dicoLabel)
+            print(Result)
         print("Synthesis : "+str(shift+1)+" images treated, "+str(success)+" success, "+str(shift-success+1)+" failures\n")
