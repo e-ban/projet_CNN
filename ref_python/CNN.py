@@ -134,11 +134,11 @@ class CNN :
                                 for n in range(-w_ker//2,w_ker//2):
                                     for l in range(self.canal): #colors
                                         if (i+m < self.height and j+n < self.width and i+m>=0 and j+n>=0):
-                                            s = s + (self.matrixPix[i+m,j+n,l]+ biasesVect[c])*kernel[m,n,l,c] #
+                                            s = s + (self.matrixPix[i+m,j+n,l])*kernel[m,n,l,c] #
                             if (s<0):
                                 s=0
 
-                            matS[i,j,c] = s
+                            matS[i,j,c] = s + biasesVect[c]
 
         self.matrixPix = matS
         self.canal = (np.shape(kernel)[3])
