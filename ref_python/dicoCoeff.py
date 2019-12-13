@@ -106,7 +106,7 @@ class DicoCoeff:
         return(self.dico)
 
 if __name__== "__main__":
-    dico=DicoCoeff("CNN_coeff_5x5.txt")
+    dico=DicoCoeff("CNN_coeff_3x3.txt")
     dicoCoeff=dico.dico
     print("\n")
     print(dicoCoeff)

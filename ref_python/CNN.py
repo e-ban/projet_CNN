@@ -134,13 +134,11 @@ class CNN :
                                 for n in range(-w_ker//2,w_ker//2+1):
                                     for l in range(self.canal): #colors
                                         if (i+m < self.height and j+n < self.width and i+m>=0 and j+n>=0):
-                                            s = s + (self.matrixPix[i+m,j+n,l])*kernel[m,n,l,c] #
+                                            s = s + (self.matrixPix[i+m,j+n,l])*kernel[m,n,l,c]
                             s + biasesVect[c]
                             if (s<0):
                                 s=0
-
                             matS[i,j,c] = s
-
         self.matrixPix = matS
         self.canal = (np.shape(kernel)[3])
         return 0
@@ -183,8 +181,12 @@ class CNN :
         self.cleanUp()
         pixel=[]
         for c in range(canal*width*height):
-            pixel.append(c%255)
+            pixel.append(255)
         self.matrixPix = np.array(pixel).reshape(height,width,canal)
+        for l in range(2,height,2):
+            for k in range(3,width-3):
+                for c in range(canal):
+                    self.matrixPix[l,k,c]=0
         self.height=height
         self.width=width
         self.canal = canal
@@ -192,7 +194,12 @@ class CNN :
         self.format=format
 
     def reshapeToVector(self):
-        self.matrixPix =self.matrixPix.reshape(self.height*self.width*self.canal)
+        vect=[]
+        for i in range(self.height):
+            for j in range(self.width):
+                for k in range(self.canal):
+                    vect.append(self.matrixPix[i,j,k])
+        self.matrixPix=np.array(vect,dtype=np.float64)
         self.height=self.height*self.width*self.canal
         self.width=0
         self.canal=0
@@ -243,27 +250,32 @@ class CNN :
 
 def write_pgm(mat,file):
     img=open(file,"w")
-    img.write("P3\n")
+    img.write("P2\n")
     size=str(mat.shape[1])+" "+str(mat.shape[0])+"\n"
     img.write(size)
     img.write(str(255)+"\n")
     for i in range(mat.shape[0]):
         for j in range(mat.shape[1]):
-            img.write(str(int(mat[i,j]))+" ")
+            img.write(str(int(64*mat[i,j]))+" ")
         img.write("\n")
     img.close()
     return 0;
 
-if __name__=="__main__":
+def CIFAR10():
     import dicoCoeff
     d = dicoCoeff.DicoCoeff("CNN_coeff_3x3.txt")
     cnn=CNN(d.dico,"batches.meta.txt")
     success=0
     init=0
     shift=0
-    while (shift+init <1):
+    while (shift+init <10000 and shift<10):
         cnn.cleanUp()
         cnn.load_bin("data_batch_1.bin",init+shift)
+        mat=cnn.matrixPix
+
+        #print(mat)
+        #print(mat.reshape(32*32*3))
+        #print(mat)
         #cnn.generate_Random(32,32,3,255,"P3")
         #cnn.genZero(32,32,3,255,"P3")
         cnn.format="P3"
@@ -272,20 +284,29 @@ if __name__=="__main__":
         #print("\nImage : ")
         #print(cnn.label)
         #print("\n")
-        cnn.normalize()
+
         cnn.centered_crop(24,24)
+        cnn.normalize()
         #cnn.write_pgm("crop_"+str(shift)+".pgm")
 
         #cnn.write_pgm("normal_"+str(shift)+".pgm")
         cnn.convolutionReLU("conv1")
-
+        mat=cnn.matrixPix.transpose(2,0,1)
+        #for i in range(cnn.canal):
+        #    write_pgm(mat[i],"conv1_"+str(i)+".pgm")
         cnn.maxPool([3,3],[2,2])
         #cnn.write_pgm("max1_"+str(shift)+".pgm")
         cnn.convolutionReLU("conv2")
+        mat=cnn.matrixPix.transpose(2,0,1)
+        #for i in range(cnn.canal):
+            #write_pgm(mat[i],"conv2_"+str(i)+".pgm")
         #cnn.write_pgm("conv2_"+str(shift)+".pgm")
         cnn.maxPool([3,3],[2,2])
         #cnn.write_pgm("max2_"+str(shift)+".pgm")
         cnn.convolutionReLU("conv3")
+        #mat=cnn.matrixPix.transpose(2,0,1)
+        #for i in range(cnn.canal):
+            #write_pgm(mat[i],"conv3_"+str(i)+".pgm")
         #cnn.write_pgm("conv3_"+str(shift)+".pgm")
         cnn.maxPool([3,3],[2,2])
         #cnn.write_pgm("max3_"+str(shift)+".pgm")
@@ -293,7 +314,8 @@ if __name__=="__main__":
         #cnn.print_matrixPix()
         cnn.multiplyMat("local3")
         #cnn.print_matrixPix()
-        Result=cnn.softMax()
+        #Result=cnn.softMax()
+        Result=cnn.matrixPix
         if(np.argmax(Result)==cnn.label):
             print("CNN : Success")
             success = success+1
@@ -302,7 +324,24 @@ if __name__=="__main__":
         print("Image n°",shift+init,cnn.dicoLabel[int(cnn.label[0])])
         print("result = ",cnn.dicoLabel[np.argmax(Result)])
         print(cnn.dicoLabel)
-        cnn.print_matrixPix()
         print(Result)
         print("Synthesis : taux de réussite=",success/(shift+1),"(",shift+1," images treated, ",success," success, "+str(shift-success+1)+" failures\n")
         shift=shift+1
+        print(cnn.label)
+
+def testReshapeVector():
+    import dicoCoeff
+    d = dicoCoeff.DicoCoeff("CNN_coeff_3x3.txt")
+    cnn=CNN(d.dico,"batches.meta.txt")
+    cnn.generate_Random(3,3,20,5,"P3")
+    mat=cnn.matrixPix
+    cnn.print_matrixPix()
+    cnn.reshapeToVector()
+    cnn.print_matrixPix()
+    cnn.multiplyMat("local3")
+    cnn.print_matrixPix()
+
+
+if __name__=="__main__":
+    CIFAR10()
+    #testReshapeVector()
