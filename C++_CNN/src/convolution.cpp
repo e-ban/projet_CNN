@@ -2,7 +2,7 @@
 
 
 
-
+#pragma hls_design top
 void convolutionReLU(
   din_type datain[IMGPROC_IMAGE_IN_SIZE],
   c_type weights[IMGPROC_KERNEL_SIZE],
@@ -35,9 +35,4 @@ void convolutionReLU(
       }
     }
   }
-}
-
-void loadImage(string filename,int sh)
-{
-
 }
