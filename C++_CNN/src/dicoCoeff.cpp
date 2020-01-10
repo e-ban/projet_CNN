@@ -1,34 +1,49 @@
 #include "CNN.hpp"
 #include <iostream>
 #include <fstream>
+#include <string>
 
-struct dicoElement
-{
-  string label;
-  c_type* tab;
+using namespace std;
+
+typedef std::map<string,std::array> dicoElement;
+
+enum dicoState{
+  initFSM,
+  acquireDicoElementName,
+  getValues
 };
-
-enum dicoState
 
 class CDicoCoeff{
  private :
-    (struct dicoElement) * dico;
+    dicoElement * dico;
     enum dicoState currentState;
  public:
    void loadDico(string filename);
    void dicoFsm(string line);
 };
 
+void CDicoCoeff::dicoFsm(string line)
+{
+  switch(currentState)
+  {
+    case initFSM:
+      
 
+
+    break;
+
+  }
+}
 
 void CDicoCoeff::loadDico(string filename)
 {
   ifstream INPUT_FILE(filename);
+  string lex;
   if(INPUT_FILE.is_open())
   {
-    while(INPUT_FILE.getline())
+    while(lex=INPUT_FILE.getline(" "))
     {
-      /*call to fsm*/
+      cout << lex;
     }
   }
 }
