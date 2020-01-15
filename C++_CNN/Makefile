@@ -17,3 +17,6 @@ all :
 
 %.o : %.cpp
 		$(CXX) $< $(CPPFLAGS) -c -o $(basename $<).o
+
+testinput : $(SRCDIR)/loadPicture.cpp
+						$(CXX) $(SRCDIR)/loadPicture.cpp $(CPPFLAGS) -o mytest
