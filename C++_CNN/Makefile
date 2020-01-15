@@ -3,11 +3,12 @@ SRCDIR = src
 INCDIR = include
 ACTYPESDIR = ../ac_types/include
 
-INC =  $(INCDIR)
+INC =  -I$(INCDIR)
 CXX = g++
-CPPFLAGS =  -Wall -std=c++11 -I$(INC) -I$(ACTYPESDIR)
+CPPFLAGS =  -Wall -std=c++11 $(INC) -I$(ACTYPESDIR)
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 
+OBJ=$(SRC:.c=.o)
 all :
 		@echo "in " $(DIRNAME)
 		@echo ""
@@ -20,3 +21,9 @@ all :
 
 testinput : $(SRCDIR)/loadPicture.cpp
 						$(CXX) $(SRCDIR)/loadPicture.cpp $(CPPFLAGS) -o mytest
+
+testConvol : $(OBJ)
+						$(CXX) $^ $(CPPFLAGS) -o testConv
+
+clean :
+	rm *.o mytest
