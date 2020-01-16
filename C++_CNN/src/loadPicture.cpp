@@ -45,30 +45,43 @@ int loadFilePGM(din_type image[IMGPROC_IMAGE_IN_SIZE])
   return 0;
 }
 
-int savePicture(std::string fileName,din_type image[IMGPROC_IMAGE_IN_SIZE])
+int savePicture(std::string fileName,din_type image[IMGPROC_IMAGE_IN_SIZE],int sel)
 {
+  if(sel==0){
   std::ofstream f(fileName);
   f<<"P3"<<std::endl;
   f<<"24 24"<<std::endl;
   f<<"255"<<std::endl;
-  for (int i=0;i<IMGPROC_IMAGE_IN_SIZE;i++){
-    f << image[i] << " ";
-    if ((i+1)%(24*3)==0) f<<std::endl;
-  }
+    for (int i=0;i<IMGPROC_IMAGE_IN_SIZE;i++){
+      f << image[i].to_int()<< " ";
+      if ((i+1)%(24*3)==0) f<<std::endl;
+    }
   f.close();
+  }
+  else {
+    for (int c=0;c<IMGPROC_CONV1_OUT_C;c++)
+    {
+      std::ofstream f((std::to_string(c))+(fileName));
+      f<<"P2"<<std::endl;
+      f<<"24 24"<<std::endl;
+      f<<"255"<<std::endl;
+      for (int i=0;i<IMGPROC_CONV1_IN_H;i++)
+      {
+        for (int j=0;j<IMGPROC_CONV1_IN_W;j++)
+        {
+          f << image[i*IMGPROC_CONV1_IN_H+j*IMGPROC_CONV1_IN_W+c].to_int()<< " ";
+        }
+        f<<std::endl;
+      }
+      f.close();
+    }
+
+  }
+
   return 0;
 }
 
 void printMatrix(din_type image[IMGPROC_IMAGE_IN_SIZE])
-{
-  for(int i=0; i<IMGPROC_IMAGE_IN_SIZE; i++)
-  {
-    if(i%(24)==0) std::cout<<std::endl;
-    std::cout << image[i] << " ";
-  }
-}
-
-void printMatrixInHeader(din_type image[IMGPROC_IMAGE_IN_SIZE])
 {
   for(int i=0; i<IMGPROC_IMAGE_IN_SIZE; i++)
   {

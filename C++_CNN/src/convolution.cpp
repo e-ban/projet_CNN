@@ -1,4 +1,3 @@
-#include "types.h"
 #include "convolutionReLU.h"
 
 
@@ -18,10 +17,12 @@ void convolutionReLU1(
         for (int outChannel=0;outChannel<IMGPROC_CONV1_OUT_C;outChannel++)
         {
           s=0;
-          for (int kerH=-IMGPROC_KERNEL1_H/2; kerH< IMGPROC_KERNEL1_H/2;kerH++)
+          for (int kerH=-IMGPROC_KERNEL1_H/2; kerH<=IMGPROC_KERNEL1_H/2;kerH++)
           {
-            for (int kerW=-IMGPROC_KERNEL1_W/2; kerW< IMGPROC_KERNEL1_W/2;kerW++)
+            for (int kerW=-IMGPROC_KERNEL1_W/2; kerW<=IMGPROC_KERNEL1_W/2;kerW++)
             {
+              std::cout << row << " & " << kerH << std::endl;
+              std::cout << col << " & " << kerW << "\n" << std::endl;
               for(int inChannel=0;inChannel<IMGPROC_IMAGE_IN_C;inChannel++)
               {
                 if(row+kerH>=0 && row+kerH<IMGPROC_IMAGE_IN_H && col+kerW>=0 && col+kerW<IMGPROC_IMAGE_IN_W){

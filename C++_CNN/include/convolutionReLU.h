@@ -3,12 +3,11 @@
 
 #include "types.h"
 
-
 void convolutionReLU1(
-  din_type datain[IMGPROC_IMAGE_IN_SIZE],
-  c_type weights[IMGPROC_KERNEL1_SIZE],
-  c_type biases[IMGPROC_CONV1_OUT_C],
-  dout_type dataout[IMGPROC_CONV1_OUT_SIZE]
+  din_type*,
+  c_type*,
+  c_type*,
+  dout_type*
 );
 
 #endif

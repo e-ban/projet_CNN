@@ -1,4 +1,0 @@
-#include "convolution.cpp"
-
-
-#pragma hls_design top
