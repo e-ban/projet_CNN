@@ -68,6 +68,16 @@ void printMatrix(din_type image[IMGPROC_IMAGE_IN_SIZE])
   }
 }
 
+void printMatrixInHeader(din_type image[IMGPROC_IMAGE_IN_SIZE])
+{
+  for(int i=0; i<IMGPROC_IMAGE_IN_SIZE; i++)
+  {
+    if(i%(24)==0) std::cout<<std::endl;
+    std::cout << image[i] << " ";
+  }
+}
+
+
 /*int main()
 {
   din_type input[24*24*3];
