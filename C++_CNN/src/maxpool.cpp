@@ -2,13 +2,14 @@
 #include "maxpool.h"
 
 void maxpool1(
-  dout_type datain[IMGPROC_CONV1_OUT_SIZE];
-  dout_type2 dataout[IMGPROC_CONV2_IN_SIZE];
+  dout_type datain[IMGPROC_CONV1_OUT_SIZE],
+  dout_type_maxp dataout[IMGPROC_CONV2_IN_SIZE]
   ){
-    dout_type2 maxi=0;
-    for (int x=0; x<IMGPROC_CONV1_OUT_H; IMGPROC_MAXP_STRIDE){
-      for (int y=0; y<IMGPROC_CONV1_OUT_W; IMGPROC_MAXP_STRIDE){
-        for (int c=0, c<IMGPROC_CONV1_OUT_C; c++){
+  dout_type_maxp maxi=0;
+    for (int x=0; x<IMGPROC_CONV1_OUT_H; x+=IMGPROC_MAXP_STRIDE){
+      for (int y=0; y<IMGPROC_CONV1_OUT_W; y+=IMGPROC_MAXP_STRIDE){
+        for (int c=0;
+ c<IMGPROC_CONV1_OUT_C; c++){
           maxi=0;
           for (int poolH=0; poolH<IMGPROC_MAXP_SIZE; poolH++){
             for (int poolW=0; poolW<IMGPROC_MAXP_SIZE; poolW++){
@@ -24,7 +25,7 @@ void maxpool1(
               }
             }
           }
-          dataout[((IMGPROC_CONV2_IN_H*x)/IMCPROC_MAXP_STRIDE) + ((IMGPROC_CONV2_IN_W*y)/IMCPROC_MAXP_STRIDE)+IMGPROC_CONV2_IN_C]=maxi;
+          dataout[((IMGPROC_CONV2_IN_H*x)/IMGPROC_MAXP_STRIDE) + ((IMGPROC_CONV2_IN_W*y)/IMGPROC_MAXP_STRIDE)+IMGPROC_CONV2_IN_C]=maxi;
         }
       }
     }

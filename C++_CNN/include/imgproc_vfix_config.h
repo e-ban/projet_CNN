@@ -70,6 +70,6 @@
 #define IMGPROC_CNN_OUT 10
 
 #define IMGPROC_MAXP_SIZE 3
-#define IMCPROC_MAXP_STRIDE 2
+#define IMGPROC_MAXP_STRIDE 2
 
 #endif
