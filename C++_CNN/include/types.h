@@ -10,5 +10,6 @@
 typedef ac_fixed<IMGPROC_IMAGE_IN_P> din_type;
 typedef ac_fixed<IMGPROC_CONV1_OUT_P> dout_type;
 typedef ac_fixed<IMGPROC_KERNEL1_P> c_type;
+typedef ac_fixed<IMGPROC_CONV2_IN_P> dout_type_max;
 
 #endif
