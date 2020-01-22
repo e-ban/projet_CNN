@@ -46,7 +46,7 @@ void maxpool(  CNN_DATA_TYPE datain[],  CNN_DATA_TYPE dataout[],int sel  ){
               }
             }
           }
-          dataout[((width_out*canal_out*x)/CNN_MAXP_STRIDE) + ((canal_out*y)/CNN_MAXP_STRIDE)+canal_out]=maxi;
+          dataout[width_out*canal_out*(x/CNN_MAXP_STRIDE) + canal_out*(y/CNN_MAXP_STRIDE)+canal_out]=maxi;
         }
       }
     }

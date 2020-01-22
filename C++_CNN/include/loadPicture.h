@@ -4,8 +4,8 @@
 #include "types.h"
 
 
-int loadFilePGM(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE]);
-int savePicture(std::string fileName,CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE],int);
-void printMatrix(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE]);
-
+int loadFilePGM(CNN_DATA_TYPE* image);
+int savePicture(std::string fileName,CNN_DATA_TYPE* image,int);
+void printMatrix(CNN_DATA_TYPE* image);
+void printResults(CNN_DATA_TYPE* resultsArray);
 #endif

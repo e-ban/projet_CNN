@@ -6,7 +6,7 @@
 #include "loadPicture.h"
 
 
-int loadFilePGM(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
+int loadFilePGM(CNN_DATA_TYPE* image)
 {
   std::string taille;
   std::string format;
@@ -90,7 +90,13 @@ void printMatrix(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
   }
 }
 
-
+void printResults(CNN_DATA_TYPE* resultsArray)
+{
+  for (int i=0; i< CNN_OUT;i++)
+  {
+    std::cout << resultsArray[i] << std::endl;
+  }
+}
 /*int main()
 {
   CNN_IMAGEIN_TYPE input[24*24*3];

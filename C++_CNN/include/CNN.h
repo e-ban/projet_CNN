@@ -7,5 +7,5 @@
 #include "maxpool.h"
 #include "perceptron.h"
 
-void CNN(CNN_DATA_TYPE imageIN[],CNN_DATA_TYPE mem1[],CNN_DATA_TYPE mem2[]);
+void CNN(CNN_DATA_TYPE* imageIN,CNN_DATA_TYPE* mem1,CNN_DATA_TYPE* mem2);
 #endif

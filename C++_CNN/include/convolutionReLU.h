@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-void convolutionReLU(  CNN_DATA_TYPE datain[], CNN_DATA_TYPE dataout[], CNN_COEFF_TYPE weights[],  CNN_COEFF_TYPE biases[],  int);
+void convolutionReLU(  CNN_DATA_TYPE* datain, CNN_DATA_TYPE* dataout, CNN_COEFF_TYPE* weights,  CNN_COEFF_TYPE* biases,  int);
 
 #endif

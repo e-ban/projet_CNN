@@ -2,7 +2,7 @@
 
 
 
-void convolutionReLU(  CNN_DATA_TYPE datain[], CNN_DATA_TYPE dataout[], CNN_COEFF_TYPE weights[],  CNN_COEFF_TYPE biases[],  int sel )
+void convolutionReLU(  CNN_DATA_TYPE* datain, CNN_DATA_TYPE* dataout, CNN_COEFF_TYPE* weights,  CNN_COEFF_TYPE* biases,  int sel )
   {
     int height_in,width_in,canal_in,height_out, width_out, canal_out;
     if(sel==1){
