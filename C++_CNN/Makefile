@@ -20,7 +20,7 @@ all :
 		@echo "in " $(DIRNAME)
 		@echo ""
 		@echo "Usage:"
-		@echo "cnnTest => generate executable file"
+		@echo "test.exe => generate executable file"
 		@echo "clean => clean up the .o .pgm files"
 		@echo "mrproper => clean up everything"
 
