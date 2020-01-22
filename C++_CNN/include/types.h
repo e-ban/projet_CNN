@@ -1,15 +1,14 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
-#include "imgproc_vfix_config.h"
+#include "macros_CNN.h"
 
 
 #include "ac_fixed.h"
 #include "ac_channel.h"
 
-typedef ac_fixed<IMGPROC_IMAGE_IN_P> din_type;
-typedef ac_fixed<IMGPROC_CONV1_OUT_P> dout_type;
-typedef ac_fixed<IMGPROC_KERNEL1_P> c_type;
-typedef ac_fixed<IMGPROC_CONV2_IN_P> dout_type_maxp;
-typedef ac_fixed<IMGPROC_NORM_P> norm_type;
+typedef ac_fixed<CNN_DATA_P> CNN_DATA_TYPE;
+typedef ac_fixed<CNN_COEFF_P> CNN_COEFF_TYPE;
+typedef ac_fixed<CNN_NORM_P> CNN_NORM_TYPE;
+
 #endif

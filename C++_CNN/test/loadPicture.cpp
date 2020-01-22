@@ -6,7 +6,7 @@
 #include "loadPicture.h"
 
 
-int loadFilePGM(din_type image[IMGPROC_IMAGE_IN_SIZE])
+int loadFilePGM(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
 {
   std::string taille;
   std::string format;
@@ -38,38 +38,38 @@ int loadFilePGM(din_type image[IMGPROC_IMAGE_IN_SIZE])
   while (i<tx*ty*3)
   {
     f >> temp;
-    image[i]= din_type(temp);
+    image[i]= CNN_DATA_TYPE(temp);
     i++;
   }
   f.close();
   return 0;
 }
 
-int savePicture(std::string fileName,din_type image[IMGPROC_IMAGE_IN_SIZE],int sel)
+int savePicture(std::string fileName,CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE],int sel)
 {
   if(sel==0){
   std::ofstream f(fileName);
   f<<"P3"<<std::endl;
   f<<"24 24"<<std::endl;
   f<<"255"<<std::endl;
-    for (int i=0;i<IMGPROC_IMAGE_IN_SIZE;i++){
+    for (int i=0;i<CNN_IMAGE_IN_SIZE;i++){
       f << image[i].to_int()<< " ";
       if ((i+1)%(24*3)==0) f<<std::endl;
     }
   f.close();
   }
   else {
-    for (int c=0;c<IMGPROC_CONV1_OUT_C;c++)
+    for (int c=0;c<CNN_CONV1_OUT_C;c++)
     {
       std::ofstream f((std::to_string(c))+(fileName));
       f<<"P2"<<std::endl;
       f<<"24 24"<<std::endl;
       f<<"255"<<std::endl;
-      for (int i=0;i<IMGPROC_CONV1_IN_H;i++)
+      for (int i=0;i<CNN_CONV1_IN_H;i++)
       {
-        for (int j=0;j<IMGPROC_CONV1_IN_W;j++)
+        for (int j=0;j<CNN_CONV1_IN_W;j++)
         {
-          f << image[i*IMGPROC_CONV1_IN_H+j*IMGPROC_CONV1_IN_W+c].to_int()<< " ";
+          f << image[i*CNN_CONV1_IN_H+j*CNN_CONV1_IN_W+c].to_int()<< " ";
         }
         f<<std::endl;
       }
@@ -81,9 +81,9 @@ int savePicture(std::string fileName,din_type image[IMGPROC_IMAGE_IN_SIZE],int s
   return 0;
 }
 
-void printMatrix(din_type image[IMGPROC_IMAGE_IN_SIZE])
+void printMatrix(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
 {
-  for(int i=0; i<IMGPROC_IMAGE_IN_SIZE; i++)
+  for(int i=0; i<CNN_IMAGE_IN_SIZE; i++)
   {
     if(i%(24)==0) std::cout<<std::endl;
     std::cout << image[i] << " ";
@@ -93,8 +93,8 @@ void printMatrix(din_type image[IMGPROC_IMAGE_IN_SIZE])
 
 /*int main()
 {
-  din_type input[24*24*3];
-//  din_type output[24*24*3];
+  CNN_IMAGEIN_TYPE input[24*24*3];
+//  CNN_IMAGEIN_TYPE output[24*24*3];
   loadFilePGM(input);
   printMatrix(input);
   savePicture("save.ppm",input);

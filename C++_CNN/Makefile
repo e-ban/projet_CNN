@@ -1,29 +1,43 @@
+TARGET = CNN_RISCV.exe
 DIRNAME = `basename $(PWD)`
 SRCDIR = src
 INCDIR = include
+TESTDIR = test
 ACTYPESDIR = ../ac_types/include
 ACMATHDIR = ../ac_math/include
-INC =  -I$(INCDIR)
-CXX = g++
-CPPFLAGS =   -Wall -std=c++11 $(INC) -I$(ACTYPESDIR) -I$(ACMATHDIR)
-SRC = $(wildcard $(SRCDIR)/*.cpp)
 
-OBJ=$(SRC:.c=.o)
+CXX = `which g++`
+RM = `which rm` -f
+DOXYGEN = `which doxygen`
+CXXFLAGS =   -std=c++11 -Wall
+
+INCLUDE =  -I$(INCDIR) -I$(ACTYPESDIR) -I$(ACMATHDIR)
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:.cpp=.o)
+TEST = $(wildcard $(TESTDIR)/*.cpp)
+OBJTEST = $(TEST:.cpp=.o)
 all :
 		@echo "in " $(DIRNAME)
 		@echo ""
 		@echo "Usage:"
-		@echo ""
-		@echo "build ===> compile toutes les sources"
+		@echo "cnnTest => generate executable file"
+		@echo "clean => clean up the .o .pgm files"
+		@echo "mrproper => clean up everything"
+
+test.exe : $(OBJTEST) $(OBJ)
+			$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
+
+$(TARGET) : $(OBJ)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
 
 %.o : %.cpp
-		$(CXX) $< $(CPPFLAGS) -c -o $(basename $<).o
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $^
 
-testinput : $(SRCDIR)/loadPicture.cpp
-						$(CXX) $(SRCDIR)/loadPicture.cpp $(CPPFLAGS) -o mytest
 
-test : $(OBJ)
-			$(CXX) $^ $(CPPFLAGS) -o test
+.PHONY: clean mrproper
 
 clean :
-	rm *.o mytest
+	$(RM) $(OBJ) *.pgm $(OBJTEST)
+
+mrproper :
+	$(RM) $(OBJ) $(TARGET) *.pgm $(OBJTEST)

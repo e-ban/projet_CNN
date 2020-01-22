@@ -130,8 +130,8 @@ class CNN :
                             s = 0
                             h_ker=np.shape(kernel)[0]#height of kernel
                             w_ker=np.shape(kernel)[1]#width of kernel
-                            for m in range(-h_ker//2,h_ker//2+1):
-                                for n in range(-w_ker//2,w_ker//2+1):
+                            for m in range(-(h_ker//2),h_ker//2+1):
+                                for n in range(-(w_ker//2),w_ker//2+1):
                                     for l in range(self.canal): #colors
                                         if (i+m < self.height and j+n < self.width and i+m>=0 and j+n>=0):
                                             s = s + (self.matrixPix[i+m,j+n,l])*kernel[m,n,l,c]

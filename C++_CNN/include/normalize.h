@@ -4,8 +4,5 @@
 #include "types.h"
 #include "ac_math.h"
 
-void normalize(
-  din_type imageIN[IMGPROC_IMAGE_IN_SIZE],
-  din_type imageOUT[IMGPROC_IMAGE_IN_SIZE]
-);
+void normalize(  CNN_DATA_TYPE imageIN[],  CNN_DATA_TYPE imageOUT[]);
 #endif

@@ -1,13 +1,10 @@
 #include "normalize.h"
 
-void normalize(
-  din_type imageIN[IMGPROC_IMAGE_IN_SIZE],
-  din_type imageOUT[IMGPROC_IMAGE_IN_SIZE]
-)
+void normalize(  CNN_DATA_TYPE imageIN[],  CNN_DATA_TYPE imageOUT[])
 {
-  norm_type u[3]={0,0,0};
-  norm_type s[3]={0,0,0};
-  for(int ipix=0; ipix< IMGPROC_IMAGE_IN_SIZE;ipix+=3)
+  CNN_NORM_TYPE u[3]={0,0,0};
+  CNN_NORM_TYPE s[3]={0,0,0};
+  for(int ipix=0; ipix< CNN_IMAGE_IN_SIZE;ipix+=3)
   {
     for (int k=0;k<3;k++)
     {
@@ -18,7 +15,7 @@ void normalize(
   {
     u[k]=u[k]/576;
   }
-  for(int j=0;j<IMGPROC_IMAGE_IN_SIZE;j+=3)
+  for(int j=0;j<CNN_IMAGE_IN_SIZE;j+=3)
   {
     for (int k=0;k<3;k++)
     {
@@ -30,7 +27,7 @@ void normalize(
     ac_math::ac_sqrt(s[k],s[k]);
     s[k]=s[k]/24;
   }
-  for(int j=0;j<IMGPROC_IMAGE_IN_SIZE;j+=3)
+  for(int j=0;j<CNN_IMAGE_IN_SIZE;j+=3)
   {
     for (int k=0;k<3;k++)
     {

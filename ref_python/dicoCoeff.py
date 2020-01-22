@@ -105,12 +105,30 @@ class DicoCoeff:
                     self.index = len(self.file)
         return(self.dico)
 
+    def createCHeader(self,fileName):
+        with open(fileName,"w") as f:
+            for de in self.dico:
+                f.write("\nc_type "+de+"[...] = { ")
+                array=self.dico[de].reshape(self.dico[de].size)
+                f.write(str(array[0]))
+                for i in range(1,len(array)):
+                    f.write(", ")
+                    f.write(str(array[i]))
+                    if(i%10==0):
+                        f.write("\n")
+                f.write(" };\n")
+
+
+
+
 if __name__== "__main__":
     dico=DicoCoeff("CNN_coeff_3x3.txt")
     dicoCoeff=dico.dico
     print("\n")
-    print(dicoCoeff)
-    print("\n")
+    #print(dicoCoeff)
+    #print("\n")
     print(dicoCoeff.keys())
-    mat=dicoCoeff["conv2/weights"]
-    print(np.shape(mat))
+    dico.createCHeader("headertest.h")
+    #mat=dicoCoeff["conv2/weights"]
+    #print(mat)
+    #print(np.shape(mat))

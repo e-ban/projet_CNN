@@ -3,9 +3,6 @@
 
 #include "types.h"
 
-void maxpool1(
-  dout_type datain[IMGPROC_CONV1_OUT_SIZE],
-  dout_type_maxp dataout[IMGPROC_CONV2_IN_SIZE]
-  );
+void maxpool(  CNN_DATA_TYPE datain[], CNN_DATA_TYPE dataout[],int  );
 
 #endif

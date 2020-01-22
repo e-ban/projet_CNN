@@ -28,8 +28,8 @@ class ConvRELU(layer):
             for col in range(width):
                 for outChannel in range(kChannelO):
                     s=0
-                    for kerH in range(-kHeight//2,kHeight//2+1):
-                        for kerW in range(-kWidth//2,kWidth//2+1):
+                    for kerH in range(-(kHeight//2),kHeight//2+1):
+                        for kerW in range(-(kWidth//2),kWidth//2+1):
                             for inChannel in range(canal):
                                 if (kerH+row < height and kerW+col < width and kerH+row>=0 and kerW+col>=0):
                                     s=s+input[row+kerH,col+kerW,inChannel]*ker[kerH,kerW,inChannel,outChannel]
@@ -105,7 +105,7 @@ class Perceptron(layer):
             val=0
             for inDim in range(shape[0]):
                 val=val+input[inDim]*self.weights[inDim,outDim]
-            self.output[outDim]=val+self.biases[outDim]
+            self.output[outDim]=val#+self.biases[outDim]
 
 class CNN:
     def __init__(self,dicoCoeff):
@@ -134,13 +134,13 @@ class CNN:
 
     def run(self,inputPic):
         buf=inputPic
-        #write_pgm(inputPic,"input.ppm")
+        write_pgm(inputPic,"input.ppm")
         if(len(inputPic)>0):
             for layer in self.layers:
                 #print(type(layer))
                 layer.build(buf)
                 buf=layer.output
-                #write_pgm(buf,str(type(layer).__name__)+".ppm")
+                write_pgm(buf,str(type(layer).__name__)+".ppm")
         return buf
 
 class ImageLoader:
@@ -196,11 +196,24 @@ def write_pgm(matrix,file):
             img.write("\n")
         img.close()
 
-if __name__=="__main__":
-    import dicoCoeff
+def write_Npgm(matrix,file):
+    if(len(matrix.shape)==3):
+        height,width,canal=matrix.shape
+        for c in range(canal):
+            img=open(file+"_"+str(c),"w")
+            img.write("P2"+"\n")
+            size=str(width)+" "+str(height)+"\n"
+            img.write(size)
+            img.write(str(255)+"\n")
+            for i in range(height):
+                for j in range(width):
+                        img.write(str(int(matrix[i,j,c]))+" ")
+                img.write("\n")
+            img.close()
 
+def cifar10():
+    import dicoCoeff
     d=dicoCoeff.DicoCoeff("CNN_coeff_3x3.txt")
-    labels=load_labels("batches.meta.txt")
     cnn=CNN(d.dico)
     cnn.addNormalizeLayer()
     cnn.addConvolLayer("conv1")
@@ -211,9 +224,14 @@ if __name__=="__main__":
     cnn.addMaxPoolingLayer([3,3],[2,2])
     cnn.addReshapeToVectorLayer()
     cnn.addPerceptron("local3")
-    imglder=ImageLoader("data_batch_2.bin",0)
+    return(cnn)
+
+def checkCifar10():
+    cnn=cifar10()
+    labels=load_labels("batches.meta.txt")
+    imglder=ImageLoader("data_batch_1.bin",0)
     success=0
-    while imglder.shift<10000:
+    while imglder.shift<10:
         (label,image)=imglder.loadNewImage()
         results=cnn.run(centered_crop(image,24,24))
         if (np.argmax(results)==label):
@@ -225,4 +243,19 @@ if __name__=="__main__":
         print(labels)
         print("Image n°",imglder.shift,labels[int(label[0])])
         print("result = ",labels[np.argmax(results)])
-        print("Synthese : taux de réussite=",success/(imglder.shift),"(",imglder.shift," images treated, ",success," success, "+str(imglder.shift-success+1)+" failures\n")
+        print("Synthese : taux de réussite=",success/(imglder.shift),"(",imglder.shift," images treated, ",success," success, "+str(imglder.shift-success)+" failures\n")
+
+def testConvolution():
+    import dicoCoeff
+    d=dicoCoeff.DicoCoeff("CNN_coeff_3x3.txt")
+    cnn=CNN(d.dico)
+    cnn.addConvolLayer("conv1")
+    imageTest = np.array([150 for i in range(24*24*3)]).reshape(24,24,3)
+    write_pgm(imageTest,"input")
+    results=cnn.run(imageTest)
+    print(results)
+    write_Npgm(results,"convolTest")
+
+if __name__=="__main__":
+    testConvolution()
+    #checkCifar10()
