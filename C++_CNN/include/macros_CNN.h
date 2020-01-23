@@ -2,9 +2,11 @@
 #define __MACROS_CNN__
 
 /*Parameters of ac_fixed*/
-#define CNN_DATA_P 40, 10, true, AC_RND
-#define CNN_COEFF_P 40, 10, true, AC_RND
-#define CNN_NORM_P 40,10,false,AC_RND
+#define CNN_IMAGE_P 8,8,false,AC_RND
+#define CNN_UDATA_P 20, 10, false, AC_RND
+#define CNN_DATA_P 20, 10, true, AC_RND
+#define CNN_COEFF_P 20, 10, true, AC_RND
+#define CNN_NORM_P 20,10,false,AC_RND
 
 /*Size of arrays*/
 #define CNN_IMAGE_IN_H 24

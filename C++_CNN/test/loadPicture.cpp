@@ -1,12 +1,31 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <array>
 #include "loadPicture.h"
 
-
-int loadFilePGM(CNN_DATA_TYPE* image)
+char loadPictureRAW(CNN_IMAGE_TYPE* image,std::string fileName,int shift)
+{
+  std::ifstream f(fileName,std::ios::in | std::ios::binary);
+  if(!f.is_open()) {
+    std::cout << "Cannot open file" << std::endl;
+    return -1;
+  }
+  char* redblock = new char[1024];
+  char* greenblock = new char[1024];
+  char* blueblock = new char[1024];
+  f.seekg(shift*3073);
+  char* label=new char[1];
+  f.read(label,1);
+  f.read(redblock,1024);
+  f.read(greenblock,1024);
+  f.read(blueblock,1024);
+  f.close();
+  for (int i; i<1024;i++)
+  {
+    image[i] = CNN_IMAGE_TYPE(redblock[i]);
+    image[i+1] = CNN_IMAGE_TYPE(greenblock[i]);
+    image[i+2] = CNN_IMAGE_TYPE(blueblock[i]);
+  }
+  return *label;
+}
+int loadFilePGM(CNN_IMAGE_TYPE* image)
 {
   std::string taille;
   std::string format;
@@ -38,14 +57,14 @@ int loadFilePGM(CNN_DATA_TYPE* image)
   while (i<tx*ty*3)
   {
     f >> temp;
-    image[i]= CNN_DATA_TYPE(temp);
+    image[i]= CNN_IMAGE_TYPE(temp);
     i++;
   }
   f.close();
   return 0;
 }
 
-int savePicture(std::string fileName,CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE],int sel)
+int savePicture(std::string fileName,CNN_IMAGE_TYPE image[CNN_IMAGE_IN_SIZE],int sel)
 {
   if(sel==0){
   std::ofstream f(fileName);
@@ -69,7 +88,7 @@ int savePicture(std::string fileName,CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE],int 
       {
         for (int j=0;j<CNN_CONV1_IN_W;j++)
         {
-          f << image[i*CNN_CONV1_IN_H+j*CNN_CONV1_IN_W+c].to_int()<< " ";
+          f << image[i*CNN_CONV1_IN_H+j*CNN_CONV1_IN_W+c]<< " ";
         }
         f<<std::endl;
       }
@@ -81,7 +100,7 @@ int savePicture(std::string fileName,CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE],int 
   return 0;
 }
 
-void printMatrix(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
+void printMatrix(CNN_IMAGE_TYPE image[CNN_IMAGE_IN_SIZE])
 {
   for(int i=0; i<CNN_IMAGE_IN_SIZE; i++)
   {
@@ -90,7 +109,7 @@ void printMatrix(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
   }
 }
 
-void printResults(CNN_DATA_TYPE* resultsArray)
+void printResults(CNN_IMAGE_TYPE* resultsArray)
 {
   for (int i=0; i< CNN_OUT;i++)
   {

@@ -257,5 +257,8 @@ def testConvolution():
     write_Npgm(results,"convolTest")
 
 if __name__=="__main__":
-    testConvolution()
+    imglder=ImageLoader("data_batch_1.bin",0)
+    (label,image)=imglder.loadNewImage()
+    print(image)
+    #testConvolution()
     #checkCifar10()

@@ -1,9 +1,9 @@
 #include "CNN.h"
-#include "loadPicture.h"
+
 
 #pragma hls_design top
 
-void CNN(CNN_DATA_TYPE* imageIN,CNN_DATA_TYPE* mem1,CNN_DATA_TYPE* mem2)
+void CNN(CNN_DATA_TYPE imageIN[CNN_IMAGE_IN_SIZE],CNN_DATA_TYPE mem1[CNN_CONV1_IN_SIZE],CNN_DATA_TYPE mem2[CNN_CONV1_IN_SIZE])
 {
   normalize(imageIN,mem1);
 
