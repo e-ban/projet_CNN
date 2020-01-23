@@ -8,7 +8,13 @@
 #define CNN_COEFF_P 20, 10, true, AC_RND
 #define CNN_NORM_P 20,10,false,AC_RND
 
+
 /*Size of arrays*/
+#define CNN_IMAGE_FULL_H 32
+#define CNN_IMAGE_FULL_W 32
+#define CNN_IMAGE_FULL_C 3
+#define CNN_IMAGE_FULL_SIZE CNN_IMAGE_FULL_H*CNN_IMAGE_FULL_W*CNN_IMAGE_FULL_C
+
 #define CNN_IMAGE_IN_H 24
 #define CNN_IMAGE_IN_W 24
 #define CNN_IMAGE_IN_C 3
