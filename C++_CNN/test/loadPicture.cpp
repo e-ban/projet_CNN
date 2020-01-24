@@ -28,7 +28,7 @@ char loadPictureRAW(CNN_DATA_TYPE* image,std::string fileName,int shift)
   }
   return *label;
 }
-int loadFilePGM(CNN_DATA_TYPE* image)
+int loadFilePGM(CNN_IMAGE_TYPE* image)
 {
   std::string taille;
   std::string format;
@@ -61,7 +61,7 @@ int loadFilePGM(CNN_DATA_TYPE* image)
   {
     f >> temp;
     std::cout << temp;
-    image[i]= CNN_DATA_TYPE(temp);
+    image[i]= CNN_IMAGE_TYPE(temp);
     i++;
   }
   f.close();
@@ -151,6 +151,17 @@ int savePictureRed(std::string fileName,CNN_DATA_TYPE* image,int sel)
         }
         f.close();
       }
+  }
+  else if(sel==3){
+  std::ofstream f(fileName+".pgm");
+  f<<"P2"<<std::endl;
+  f<<"320 240"<<std::endl;
+  f<<"255"<<std::endl;
+    for (int i=0;i<CNN_VGA_SIZE;i++){
+      f << image[i].to_int()<< " ";
+      if ((i+1)%(320)==0) f<<std::endl;
+    }
+  f.close();
   }
   else if(sel==4){
     for (int c=0;c<CNN_PER_IN_C;c++)

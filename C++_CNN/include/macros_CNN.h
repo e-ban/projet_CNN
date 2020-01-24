@@ -7,7 +7,7 @@
 #define CNN_DATA_P 20, 10, true, AC_RND
 #define CNN_COEFF_P 20, 10, true, AC_RND
 #define CNN_NORM_P 20,10,false,AC_RND
-
+#define CNN_MASK_P 1,1,false,AC_RND
 
 /*Size of arrays*/
 #define CNN_IMAGE_FULL_H 32
@@ -68,5 +68,10 @@
 #define CNN_OUT 10
 #define CNN_MAXP_SIZE 3
 #define CNN_MAXP_STRIDE 2
+
+#define CNN_VGA_H 240
+#define CNN_VGA_W 320
+#define CNN_VGA_C 1
+#define CNN_VGA_SIZE CNN_VGA_H*CNN_VGA_W*CNN_VGA_C
 
 #endif

@@ -4,7 +4,7 @@
 
 bool verbosity=false;
 
-void resizeMatrix(CNN_DATA_TYPE imageIN[CNN_IMAGE_FULL_SIZE],CNN_DATA_TYPE imageOUT[CNN_IMAGE_IN_SIZE])
+void resizeMatrix(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_FULL_SIZE],CNN_IMAGE_TYPE imageOUT[CNN_IMAGE_IN_SIZE])
 {
   int marginH = (CNN_IMAGE_FULL_H-CNN_IMAGE_IN_H)/2;
   int marginW = (CNN_IMAGE_FULL_W-CNN_IMAGE_IN_W)/2;
@@ -55,10 +55,11 @@ int main(int argc,char* argv[] )
   }
   else usage(argv[0]);
 
-  CNN_DATA_TYPE image[CNN_IMAGE_FULL_SIZE];
-  CNN_DATA_TYPE imageResized[CNN_IMAGE_IN_SIZE];
+  CNN_IMAGE_TYPE image[CNN_IMAGE_FULL_SIZE];
+  CNN_IMAGE_TYPE imageResized[CNN_IMAGE_IN_SIZE];
   CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE];
   CNN_DATA_TYPE mem2[CNN_CONV1_OUT_SIZE];
+  CNN_IMAGE_TYPE imageOut[CNN_VGA_SIZE];
   //loadFilePGM(image);
   int success=0;
   string labelsTab[10]={
@@ -81,7 +82,7 @@ int main(int argc,char* argv[] )
     resizeMatrix(image,imageResized);
     if(verbosity) savePictureRed("gen_pic/imageCut",imageResized,0);
 
-
+    /*
     normalize(imageResized,mem1);
     if(verbosity) savePictureRed("gen_pic/normalized",mem1,0);
 
@@ -99,10 +100,10 @@ int main(int argc,char* argv[] )
     convolutionReLU(mem1,mem2,conv3_weights,conv3_biases,3);
 
     maxpool(mem2,mem1,3);
-    if(verbosity) savePictureRed("gen_pic/maxp3_",mem1,4);
+    if(verbosity) savePictureRed("gen_pic/maxp3_",mem1,4);*/
     //perceptron(mem1,mem2,local3_weights,local3_biases);
-//CNN(imageResized,mem1,mem2);
-    if(verbosity) printResults(mem2);
+    CNN(imageResized,mem1,mem2,imageOut);
+    /*if(verbosity) printResults(mem2);
     CNN_DATA_TYPE max=0;
     for (int j=0;j<10;j++)
     {
@@ -114,6 +115,7 @@ int main(int argc,char* argv[] )
     }
     if(label==resultLabel) success++;
     std::cout<<"Image "<<i<<" ["<<labelsTab[label]<<"] : result : "<<labelsTab[resultLabel]<<" |\t success Rate = "<<success/(i+1) << std::endl;
-  }
+  }*/
+    writePGM("output",imageOut,3);
 
 }

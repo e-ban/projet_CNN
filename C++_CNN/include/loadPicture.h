@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-char loadPictureRAW(CNN_DATA_TYPE* image,std::string fileName,int shift);
+char loadPictureRAW(CNN_IMAGE_TYPE* image,std::string fileName,int shift);
 int loadFilePGM(CNN_DATA_TYPE* image);
 int savePicture(std::string fileName,CNN_DATA_TYPE* image,int);
 void printMatrix(CNN_DATA_TYPE* image);
