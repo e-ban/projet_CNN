@@ -1,13 +1,12 @@
 #include "CNN.h"
-
+#include "imageNorm.h"
 
 #pragma hls_design top
 
-void CNN(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_IN_SIZE],CNN_DATA_TYPE mem1[CNN_CONV1_IN_SIZE],CNN_DATA_TYPE mem2[CNN_CONV1_IN_SIZE],CNN_IMAGE_TYPE imageOUT[CNN_VGA_SIZE])
+void CNN(CNN_DATA_TYPE mem1[CNN_CONV1_IN_SIZE],CNN_DATA_TYPE mem2[CNN_CONV1_IN_SIZE],CNN_IMAGE_TYPE imageOUT[CNN_VGA_SIZE])
 {
-//  normalize(imageIN,mem1);
 
-  convolutionReLU(mem1,mem2,conv1_weights,conv1_biases,1);
+  convolutionReLU(imageIN,mem2,conv1_weights,conv1_biases,1);
 
   maxpool(mem2,mem1,1);
 
