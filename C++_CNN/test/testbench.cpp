@@ -4,7 +4,7 @@
 
 bool verbosity=false;
 
-void resizeMatrix(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_FULL_SIZE],CNN_IMAGE_TYPE imageOUT[CNN_IMAGE_IN_SIZE])
+void resizeMatrix(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_FULL_SIZE],CNN_DATA_TYPE imageOUT[CNN_IMAGE_IN_SIZE])
 {
   int marginH = (CNN_IMAGE_FULL_H-CNN_IMAGE_IN_H)/2;
   int marginW = (CNN_IMAGE_FULL_W-CNN_IMAGE_IN_W)/2;
@@ -15,7 +15,7 @@ void resizeMatrix(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_FULL_SIZE],CNN_IMAGE_TYPE ima
     {
       for (int c =0 ; c<CNN_IMAGE_FULL_C;c++)
         {
-          imageOUT[io*CNN_IMAGE_IN_C*CNN_IMAGE_IN_W+jo*CNN_IMAGE_IN_C+c]=imageIN[ii*CNN_IMAGE_FULL_C*CNN_IMAGE_FULL_W+ji*CNN_IMAGE_FULL_C+c];
+          imageOUT[io*CNN_IMAGE_IN_C*CNN_IMAGE_IN_W+jo*CNN_IMAGE_IN_C+c]=(CNN_DATA_TYPE)imageIN[ii*CNN_IMAGE_FULL_C*CNN_IMAGE_FULL_W+ji*CNN_IMAGE_FULL_C+c];
         }
       jo++;
     }
@@ -56,7 +56,7 @@ int main(int argc,char* argv[] )
   else usage(argv[0]);
 
   CNN_IMAGE_TYPE image[CNN_IMAGE_FULL_SIZE];
-  CNN_IMAGE_TYPE imageResized[CNN_IMAGE_IN_SIZE];
+  CNN_DATA_TYPE imageResized[CNN_IMAGE_IN_SIZE];
   CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE];
   CNN_DATA_TYPE mem2[CNN_CONV1_OUT_SIZE];
   CNN_IMAGE_TYPE imageOut[CNN_VGA_SIZE];
@@ -77,15 +77,15 @@ int main(int argc,char* argv[] )
   {
     char resultLabel=0;
     char label=loadPictureRAW(image,"data_batch_1.bin",i);
-    if(verbosity) savePicture("gen_pic/imagefull",image,0);
+    //if(verbosity) savePicture("gen_pic/imagefull",image,0);
 
     resizeMatrix(image,imageResized);
-    if(verbosity) savePictureRed("gen_pic/imageCut",imageResized,0);
+    //if(verbosity) savePictureRed("gen_pic/imageCut",imageResized,0);
 
-    /*
+
     normalize(imageResized,mem1);
-    if(verbosity) savePictureRed("gen_pic/normalized",mem1,0);
-
+    if(verbosity) saveDATA("gen_pic/normalized",mem1);
+/*
     convolutionReLU(mem1,mem2,conv1_weights,conv1_biases,1);
     if(verbosity) savePictureRed("gen_pic/conv1_",mem2,1);
 
@@ -102,7 +102,7 @@ int main(int argc,char* argv[] )
     maxpool(mem2,mem1,3);
     if(verbosity) savePictureRed("gen_pic/maxp3_",mem1,4);*/
     //perceptron(mem1,mem2,local3_weights,local3_biases);
-    CNN(imageResized,mem1,mem2,imageOut);
+  //  CNN(imageResized,mem1,mem2,imageOut);
     /*if(verbosity) printResults(mem2);
     CNN_DATA_TYPE max=0;
     for (int j=0;j<10;j++)
@@ -115,7 +115,8 @@ int main(int argc,char* argv[] )
     }
     if(label==resultLabel) success++;
     std::cout<<"Image "<<i<<" ["<<labelsTab[label]<<"] : result : "<<labelsTab[resultLabel]<<" |\t success Rate = "<<success/(i+1) << std::endl;
-  }*/
-    writePGM("output",imageOut,3);
+    */
+  }
+  //  if(verbosity) savePictureRed("output",imageOut,3);
 
 }

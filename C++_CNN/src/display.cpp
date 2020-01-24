@@ -1,5 +1,5 @@
 #include "display.h"
-
+#include "masks.h"
 
 void display(char label,CNN_IMAGE_TYPE imageIn[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE imageOut[CNN_VGA_SIZE])
 {
@@ -84,7 +84,8 @@ void display(char label,CNN_IMAGE_TYPE imageIn[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE
       maskRight = 0;
       break;
   }
-  int ii=0,ij=0;
+
+  int ii=0,ji=0;
   int canal=0;
   int widthMask=maskRight-maskLeft;
 
@@ -93,11 +94,11 @@ void display(char label,CNN_IMAGE_TYPE imageIn[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE
     ji=0;
     for(int jo=0; jo<CNN_VGA_W;jo++)
     {
-      if(io<CADRE_VGA_TOP || jo<CADRE_VGA_LEFT || io>CADRE_VGA_BOTTOM || jo >CADRE_VGA_RIGHT) imageOut=0;
-      else
+      if(io>CADRE_VGA_TOP && io<CADRE_VGA_BOTTOM && jo>CADRE_VGA_LEFT && jo<CADRE_VGA_RIGHT)
       {
         imageOut[io*CNN_VGA_W+jo] = imageIn[ii*CNN_IMAGE_IN_W*CNN_IMAGE_IN_C+ji*CNN_IMAGE_IN_C+canal];
       }
+      else imageOut[io*CNN_VGA_W+jo]=0;
       ji++;
       //overlay
       if(io>maskTop && io<maskBottom && jo>maskLeft && jo<maskRight)

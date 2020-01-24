@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-char loadPictureRAW(CNN_DATA_TYPE* image,std::string fileName,int shift)
+char loadPictureRAW(CNN_IMAGE_TYPE* image,std::string fileName,int shift)
 {
   std::ifstream f(fileName,std::ios::in | std::ios::binary);
   if(!f.is_open()) {
@@ -22,9 +22,9 @@ char loadPictureRAW(CNN_DATA_TYPE* image,std::string fileName,int shift)
   f.close();
   for (int i; i<1024;i++)
   {
-    image[3*i] = CNN_DATA_TYPE((unsigned char)redblock[i]);
-    image[3*i+1] = CNN_DATA_TYPE((unsigned char)greenblock[i]);
-    image[3*i+2] = CNN_DATA_TYPE((unsigned char)blueblock[i]);
+    image[3*i] = CNN_IMAGE_TYPE((unsigned char)redblock[i]);
+    image[3*i+1] = CNN_IMAGE_TYPE((unsigned char)greenblock[i]);
+    image[3*i+2] = CNN_IMAGE_TYPE((unsigned char)blueblock[i]);
   }
   return *label;
 }
@@ -200,7 +200,18 @@ void printMatrixRed(CNN_DATA_TYPE image[CNN_IMAGE_IN_SIZE])
     std::cout << image[i] << " ";
   }
 }
-
+void saveDATA(std::string fileName,CNN_DATA_TYPE* image)
+{
+  std::ofstream f(fileName+".h");
+  f << "static image[CNN_IMAGE_IN_SIZE]={ ";
+    for (int i=0;i<CNN_IMAGE_IN_SIZE;i++){
+      f << image[i];
+      if(i!=CNN_IMAGE_IN_SIZE-1) f<<",";
+      if ((i+1)%(CNN_IMAGE_IN_C*CNN_IMAGE_IN_W)==0) f<<std::endl;
+    }
+    f<<"};"<<std::endl;
+  f.close();
+}
 void printResults(CNN_DATA_TYPE* resultsArray)
 {
   for (int i=0; i< CNN_OUT;i++)
