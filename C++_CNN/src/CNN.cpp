@@ -3,11 +3,17 @@
 
 #pragma hls_design top
 
-void CNN(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_IN_SIZE],CNN_DATA_TYPE mem1[CNN_CONV1_IN_SIZE],CNN_DATA_TYPE mem2[CNN_CONV1_IN_SIZE],CNN_IMAGE_TYPE imageOUT[CNN_VGA_SIZE])
+void CNN(CNN_IMAGE_TYPE img_in[CNN_VGA_SIZE],CNN_IMAGE_TYPE img_out[CNN_VGA_SIZE])
 {
-//  normalize(imageIN,mem1);
-
-  convolutionReLU(mem1,mem2,conv1_weights,conv1_biases,1);
+  //imageOUT[0]=imageCam[0];
+  CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE];
+  CNN_DATA_TYPE mem2[CNN_CONV1_OUT_SIZE];
+  /*for (int i=0;i<CNN_IMAGE_IN_SIZE;i++)
+  {
+    mem1[i] = (CNN_DATA_TYPE)img_in[i];
+  }*/
+  std::cout <<"start conv"<<std::endl;
+  convolutionReLU(imageNorm,mem2,conv1_weights,conv1_biases,1);
 
   maxpool(mem2,mem1,1);
 
@@ -21,8 +27,8 @@ void CNN(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_IN_SIZE],CNN_DATA_TYPE mem1[CNN_CONV1_
 
   perceptron(mem1,mem2,local3_weights,local3_biases);
 
-  char label;
-  CNN_DATA_TYPE max=0;
+  char label=0;
+  CNN_DATA_TYPE max=-999;
   for (int j=0;j<10;j++)
   {
     if (mem2[j]>max)
@@ -31,5 +37,6 @@ void CNN(CNN_IMAGE_TYPE imageIN[CNN_IMAGE_IN_SIZE],CNN_DATA_TYPE mem1[CNN_CONV1_
       label = j;
     }
   }
-  display(label,imageIN,imageOUT);
+  display(label,imageNorm,img_out);
+  if(verbosity) saveOutput("gen_pic/image_out",img_out);
 }

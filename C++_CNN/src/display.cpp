@@ -1,7 +1,7 @@
 #include "display.h"
 #include "masks.h"
 
-void display(char label,CNN_IMAGE_TYPE imageIn[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE imageOut[CNN_VGA_SIZE])
+void display(char label,CNN_DATA_TYPE input[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE output[CNN_VGA_SIZE])
 {
   int maskTop,maskBottom,maskLeft,maskRight;
   CNN_MASK_TYPE* mask;
@@ -96,14 +96,14 @@ void display(char label,CNN_IMAGE_TYPE imageIn[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE
     {
       if(io>CADRE_VGA_TOP && io<CADRE_VGA_BOTTOM && jo>CADRE_VGA_LEFT && jo<CADRE_VGA_RIGHT)
       {
-        imageOut[io*CNN_VGA_W+jo] = imageIn[ii*CNN_IMAGE_IN_W*CNN_IMAGE_IN_C+ji*CNN_IMAGE_IN_C+canal];
+        output[io*CNN_VGA_W+jo] = (CNN_IMAGE_TYPE)input[ii*CNN_IMAGE_IN_W*CNN_IMAGE_IN_C+ji*CNN_IMAGE_IN_C+canal];
       }
-      else imageOut[io*CNN_VGA_W+jo]=0;
+      else output[io*CNN_VGA_W+jo]=0;
       ji++;
       //overlay
       if(io>maskTop && io<maskBottom && jo>maskLeft && jo<maskRight)
       {
-        imageOut[io*CNN_VGA_W+jo]= imageOut[io*CNN_VGA_W+jo] + 255*mask[(io-maskTop)*widthMask+jo-maskLeft];
+        output[io*CNN_VGA_W+jo]= 255*mask[(io-maskTop)*widthMask+jo-maskLeft];
       }
     }
     ii++;

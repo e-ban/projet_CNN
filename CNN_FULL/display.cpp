@@ -103,7 +103,7 @@ void display(char label,CNN_IMAGE_TYPE imageIn[CNN_IMAGE_IN_SIZE],CNN_IMAGE_TYPE
       //overlay
       if(io>maskTop && io<maskBottom && jo>maskLeft && jo<maskRight)
       {
-        imageOut[io*CNN_VGA_W+jo]= imageOut[io*CNN_VGA_W+jo] + 255*mask[(io-maskTop)*widthMask+jo-maskLeft];
+        imageOut[io*CNN_VGA_W+jo]= 255*mask[(io-maskTop)*widthMask+jo-maskLeft];
       }
     }
     ii++;

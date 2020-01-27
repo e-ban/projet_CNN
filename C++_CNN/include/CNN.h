@@ -7,7 +7,9 @@
 #include "maxpool.h"
 #include "perceptron.h"
 #include "display.h"
-
-void CNN(CNN_IMAGE_TYPE* imageIN,CNN_DATA_TYPE* mem1,CNN_DATA_TYPE* mem2,CNN_IMAGE_TYPE* imageOUT);
+#include "loadPicture.h"
+#include "imageNorm.h"
+extern bool verbosity;
+void CNN(CNN_IMAGE_TYPE* img_in,CNN_IMAGE_TYPE* img_out);
 
 #endif

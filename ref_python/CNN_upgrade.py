@@ -54,9 +54,9 @@ class MaxPool(layer):
                     maxi=0
                     for poolH in range(self.size[0]):
                         for poolW in range(self.size[1]):
-                            if(((x+poolH) < height) and ((y+poolW) < width) ):
-                                if(input[x+poolH,y+poolW,c]) > maxi:
-                                    maxi = input[x+poolH,y+poolW,c]
+                            if(((x+poolH-1) < height) and ((y+poolW-1) < width) ):
+                                if(input[x+poolH-1,y+poolW-1,c]) > maxi:
+                                    maxi = input[x+poolH-1,y+poolW-1,c]
                             else :#zero padding
                                 if(maxi<0):
                                     maxi=0
@@ -70,21 +70,19 @@ class Normalize(layer):
         self.output = np.array([0 for i in range(N*canal)],dtype=np.float64).reshape(input.shape)
         u=0
         sig=0
-        for i in range(height):
-            for j in range(width):
-                for c in range (canal):
+        for c in range (canal):
+            for i in range(height):
+                for j in range(width):
                     u=u+input[i,j,c]/N
-        for k in range(height):
-            for l in range(width):
-                for c in range (canal):
+            
+            for k in range(height):
+                for l in range(width):
                     sig=sig+(input[k,l,c]-u)**2
-
-        sig=math.sqrt(sig/N)
-        div = max(sig,1/(math.sqrt(N)))
-
-        for m in range(height):
-            for n in range(width):
-                for c in range (canal):
+            sig=math.sqrt(sig/N)
+            div = max(sig,1/(math.sqrt(N)))
+            
+            for m in range(height):
+                for n in range(width):
                     self.output[m,n,c] = (input[m,n,c]-u)/div
 
 class ReshapeToVector(layer):
@@ -255,10 +253,28 @@ def testConvolution():
     results=cnn.run(imageTest)
     print(results)
     write_Npgm(results,"convolTest")
-
-if __name__=="__main__":
+def saveImageNorm():
     imglder=ImageLoader("data_batch_1.bin",0)
     (label,image)=imglder.loadNewImage()
-    print(image)
+    #print(image)
+    import dicoCoeff
+    d=dicoCoeff.DicoCoeff("CNN_coeff_3x3.txt")
+    cnn=CNN(d.dico)
+    cnn.addNormalizeLayer()
+    result=cnn.run(centered_crop(image,24,24))
+    print(result)
+    f=open("image.h","w")
+    f.write("CNN_DATA_TYPE imageNorm["+str(result.size)+"={")
+    for line in range(result.shape[0]):
+        for col in range(result.shape[1]):
+            for can in range(result.shape[2]):
+                f.write(str(result[line,col,can]))
+                f.write(",")
+        f.write("\n")
+    f.write("};")
+    f.close()
+    
+if __name__=="__main__":
+    
     #testConvolution()
-    #checkCifar10()
+    checkCifar10()
