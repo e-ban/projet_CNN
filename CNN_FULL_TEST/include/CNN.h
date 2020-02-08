@@ -9,6 +9,6 @@
 #include "display.h"
 #include "reshape.h"
 
-void ImgProcTest(CNN_IMAGE_TYPE* ,CNN_IMAGE_TYPE*);
+void ImgProcTest(CNN_IMAGE_TYPE*,CNN_DATA_TYPE* ,CNN_IMAGE_TYPE*);
 
 #endif

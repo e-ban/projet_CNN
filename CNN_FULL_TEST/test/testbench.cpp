@@ -3,9 +3,10 @@
 #include "normalize.h"
 #include <string>
 #include <iostream>
+#include "image_test_CNN.h"
 bool verbosity=false;
 bool outFiles=false;
-CNN_DATA_TYPE* imageIN;
+//CNN_DATA_TYPE* imageIN;
 char resultlabel;
 
 using namespace std;
@@ -79,22 +80,27 @@ int main(int argc,char* argv[] )
   CNN_IMAGE_TYPE* img_out = (CNN_IMAGE_TYPE*)calloc(CNN_VGA_SIZE,sizeof(*img_out));
   CNN_IMAGE_TYPE* imgInput = (CNN_IMAGE_TYPE*)calloc(CNN_IMAGE_FULL_SIZE,sizeof(*img_out));
   CNN_DATA_TYPE* imgResized = (CNN_DATA_TYPE*)calloc(CNN_IMAGE_IN_SIZE,sizeof(*imgResized));
-  imageIN = (CNN_DATA_TYPE*)calloc(CNN_IMAGE_IN_SIZE,sizeof(*imageIN));
+  CNN_DATA_TYPE imageIN [CNN_IMAGE_IN_SIZE];
   //Start of test
   cout << "Start CNN" << endl;
-  char label;
+  char label=6;
   double success=0;
-  for (int i =0;i<NBloop;i++)
+  for (int i =NBloop-1;i<NBloop;i++)
   {
     label=loadPictureRAW(imgInput,"data_batch_1.bin",i);
     if(label<0) break;
     if(outFiles) saveOutput("output/input"+to_string(i),(void*)imgInput,'i',CNN_IMAGE_FULL_H,CNN_IMAGE_FULL_W,CNN_IMAGE_FULL_C,"P3",0);
-    resizeMatrix(imgInput,imgResized);
+
+    resizeMatrix(imgInput,imgResized);//Resized);
     if(outFiles) saveOutput("output/inputResized"+to_string(i),(void*)imgResized,'d',CNN_IMAGE_IN_H,CNN_IMAGE_IN_W,CNN_IMAGE_IN_C,"P3",0);
+
     normalize(imgResized,imageIN);
+
     if(outFiles) saveOutput("output/inputNormalized"+to_string(i),(void*)imageIN,'d',CNN_IMAGE_IN_H,CNN_IMAGE_IN_W,CNN_IMAGE_IN_C,"P3",0);
-    ImgProcTest(img_in,img_out);
+
+    ImgProcTest(img_in,imageIN,img_out);
     if(outFiles) saveOutput("output/output"+to_string(i)+labelsTab[label]+to_string(i),(void*)img_out,'i',CNN_VGA_H,CNN_VGA_W,CNN_VGA_C,"P2",0);
+
     if(label==resultlabel)
     {
       if(verbosity) cout << "Image "<<i<<" : Success"<<endl;
@@ -107,6 +113,6 @@ int main(int argc,char* argv[] )
   free(img_in);
   free(imgResized);
   free(imgInput);
-  free(imageIN);
+
   if(label<0) exit(2);
 }

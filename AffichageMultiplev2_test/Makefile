@@ -3,8 +3,8 @@ DIRNAME = `basename $(PWD)`
 SRCDIR = ./
 INCDIR = ./
 TESTDIR = test
-ACTYPESDIR = ../../ac_types/include
-ACMATHDIR = ../../ac_math/include
+ACTYPESDIR = ../ac_types/include
+ACMATHDIR = ../ac_math/include
 
 CXX = `which g++`
 RM = `which rm` -f

@@ -67,23 +67,32 @@ class Normalize(layer):
     def build(self,input):
         height,width,canal=input.shape
         N=height * width
+        u=[0,0,0]
+        sig=[0,0,0]
+        sigmoy=0
+        umoy=0
         self.output = np.array([0 for i in range(N*canal)],dtype=np.float64).reshape(input.shape)
-        u=0
-        sig=0
-        for c in range (canal):
-            for i in range(height):
-                for j in range(width):
-                    u=u+input[i,j,c]/N
-            
-            for k in range(height):
-                for l in range(width):
-                    sig=sig+(input[k,l,c]-u)**2
-            sig=math.sqrt(sig/N)
-            div = max(sig,1/(math.sqrt(N)))
-            
-            for m in range(height):
-                for n in range(width):
-                    self.output[m,n,c] = (input[m,n,c]-u)/div
+        for i in range(height):
+            for j in range(width):
+                for c in range (canal):
+                    u[c]=u[c]+input[i,j,c]/N
+        umoy=(u[0]+u[1]+u[2])/3
+        for k in range(height):
+            for l in range(width):
+                for c in range (canal):
+                    sig[c]=sig[c]+(input[k,l,c]-umoy)**2
+        for c in range(canal):
+            sig[c]=math.sqrt(sig[c]/N)
+            sigmoy=sigmoy+sig[c]
+
+        sigmoy=sigmoy/3
+        div = max(sigmoy,1/(math.sqrt(N)))
+
+        for m in range(height):
+            for n in range(width):
+                for c in range (canal):
+                    self.output[m,n,c] = (input[m,n,c]-umoy)/div
+        print(u,sig)
 
 class ReshapeToVector(layer):
     def build(self,input):
@@ -253,6 +262,7 @@ def testConvolution():
     results=cnn.run(imageTest)
     print(results)
     write_Npgm(results,"convolTest")
+
 def saveImageNorm():
     imglder=ImageLoader("data_batch_1.bin",0)
     (label,image)=imglder.loadNewImage()
@@ -284,8 +294,8 @@ def saveImageNorm():
         f.write("\n")
     f.write("};")
     f.close()
-    
+
 if __name__=="__main__":
-    saveImageNorm()
+    #saveImageNorm()
     #testConvolution()
-    #checkCifar10()
+    checkCifar10()
