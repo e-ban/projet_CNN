@@ -1,8 +1,0 @@
-=> convolution simple (ex : edge detector)
-=> convolution (CNN) => afficher en sortie plusieurs canaux en meme temps
-	=> récupère l'entrée au format 320x240
-	=> on effectue la convolution sur toutes l'image et sur plusieurs canaux
-	=> on affiche tous les canaux générés en damier sur l'écran
-
-=> CNN => mettre qques images 24*24 dans la mémoire 
-	=> affichage de l'image d'entrée + overlay (à développer) 
