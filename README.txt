@@ -12,7 +12,7 @@ projet_CNN/
       |   |   |   |__CNN_FULL/         => C/CPP sources and tests for the Computation of the entirety of the CNN
       |   |   |   |__EdgeDetector/     => C/CPP sources and tests for the edge detector convolution
       |   |   |
-      |   |   |__PreHLS/ => sources ready to be synthesized with Catapult
+      |   |   |__PreHLS/ => sources ready to be synthesized with Catapult (contains directive.tcl)
       |   |       |__CNN/
       |   |       |__Convolution/
       |   |       |__EdgeDetector/
@@ -25,6 +25,7 @@ projet_CNN/
       |   |__edge_detector1.bit        => [old] version of edge detector
       |   |__edge_detector2.bit        => final version of edge detector
       |
+      |__EDF_files/		       => results from catapult C synthesis of the Edge Detector and the CNN [may not be the final version]
       |__doc/
       |__libs/                      => contains ac_types and ac_math libraries
       |__masks/                     => contains the 10 masks for the overlay in pgm format
