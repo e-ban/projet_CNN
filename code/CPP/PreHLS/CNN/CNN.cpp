@@ -5,12 +5,12 @@
 
 
 
-void ImgProcTest(CNN_IMAGE_TYPE* img_in,CNN_IMAGE_TYPE* img_out)
+void ImgProcTest(CNN_IMAGE_TYPE img_in[CNN_VGA_SIZE],CNN_IMAGE_TYPE img_out[CNN_VGA_SIZE])
 {
 
   CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE];
   CNN_DATA_TYPE mem2[CNN_CONV1_OUT_SIZE];
-  img_out[0]=img_in[0];
+  img_out[0]=img_in[0];//
 
   convolutionReLU(imageIN,mem2,conv1_weights,conv1_biases,1);
 

@@ -1,6 +1,17 @@
+/**
+* @file maxpool.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief Contains maxpool layer routine
+**/
+
 #include "types.h"
 #include "maxpool.h"
-
+/**
+* @param datain Input array to be processed
+* @param dataout Output array of results
+* @param sel Selector of the step (1<->3)
+* @brief Proceeds to a maxpooling operation on input
+**/
 void maxpool(  CNN_DATA_TYPE datain[],  CNN_DATA_TYPE dataout[],int sel  ){
   int height_in,width_in,canal_in, width_out, canal_out,height_out;
   if(sel==1){

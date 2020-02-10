@@ -1,34 +1,41 @@
-TARGET = CNN_RISCV.exe
+TARGET = EdgeDetector.exe
 DIRNAME = `basename $(PWD)`
-SRCDIR = ./
-INCDIR = ./
+SRCDIR = src
+INCDIR = include
 TESTDIR = test
+OUTPUTDIR = output
+DOCDIR = docs
+
 ACTYPESDIR = $(LIB_CNN)/ac_types/include
 ACMATHDIR = $(LIB_CNN)/ac_math/include
+
 
 CXX = `which g++`
 RM = `which rm` -f
 DOXYGEN = `which doxygen`
-CXXFLAGS =   -std=c++11 -Wall
+CXXFLAGS =  -std=c++11 -Wall
 
 INCLUDE =  -I$(INCDIR) -I$(ACTYPESDIR) -I$(ACMATHDIR)
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(SRC:.cpp=.o)
 TEST = $(wildcard $(TESTDIR)/*.cpp)
 OBJTEST = $(TEST:.cpp=.o)
+
 all :
 		@echo "in " $(DIRNAME)
 		@echo ""
 		@echo "Usage:"
-		@echo "test.exe => generate executable file"
-		@echo "clean => clean up the .o .pgm files"
+		@echo $(TARGET)" => generate executable file"
+		@echo "docu => generate documentation"
+		@echo "clean => clean up the .o .pgm files and docs folder"
 		@echo "mrproper => clean up everything"
 
-test.exe : $(OBJ)
-			$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
+docu :
+	$(DOXYGEN) Doxyfile
 
-$(TARGET) : $(OBJ)
+$(TARGET) : $(OBJTEST) $(OBJ)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
+	mkdir -p $(OUTPUTDIR)
 
 %.o : %.cpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $^
@@ -37,7 +44,9 @@ $(TARGET) : $(OBJ)
 .PHONY: clean mrproper
 
 clean :
-	$(RM) $(OBJ) *.pgm $(OBJTEST)
+	$(RM) $(OUTPUTDIR)/*
+	rm -rf $(DOCDIR)
 
 mrproper :
-	$(RM) $(OBJ) $(TARGET) *.pgm $(OBJTEST)
+	rm -rf $(OUTPUTDIR)
+	$(RM) $(TARGET) $(OBJ) $(OBJTEST)

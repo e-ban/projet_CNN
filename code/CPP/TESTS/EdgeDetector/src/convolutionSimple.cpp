@@ -1,5 +1,15 @@
+/**
+* @file convolution.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief Contains the convolution function
+**/
 #include "convolutionSimple.h"
-
+/**
+* @param datain An array of data as input
+* @param dataout An array to write the resulting array in
+* @param kernel Array of weights coefficient for the kernel
+* @brief Proceeds to the convolution of a kernel of weights on datain
+**/
 void convolutionReLU( CNN_DATA_OUT_TYPE datain[CNN_IMAGE_IN_SIZE], CNN_DATA_TYPE dataout[CNN_CONV1_OUT_SIZE], CNN_COEFF_TYPE kernel[CNN_KERNEL1_SIZE]){
 
 	int height_in,width_in,canal_in,height_out, width_out, canal_out;
@@ -9,7 +19,7 @@ void convolutionReLU( CNN_DATA_OUT_TYPE datain[CNN_IMAGE_IN_SIZE], CNN_DATA_TYPE
         height_out = CNN_CONV1_OUT_H;
         width_out = CNN_CONV1_OUT_W;
         canal_out = CNN_CONV1_OUT_RC;
-	
+
 	CNN_DATA_TYPE s= 0;
     	for(int row=0;row<height_out;row++)
 	{

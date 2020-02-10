@@ -1,16 +1,27 @@
+/**
+* @file CNN.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief Top level of the CNN architecture for debugging and tests, contains the routine of the system
+**/
+
 #include "CNN.h"
 #include "ioImage.h"
 
 #pragma hls_design top
 
-//extern CNN_DATA_TYPE* imageIN;
+extern bool verbosity;/**< verbosity flag, only for debug purposes*/
 
-extern bool verbosity;
-//extern bool outFiles;
+/**
+* @param img_in The input image coming from the Camera (not used here)
+* @param imageIN The image to be processed by the system (24*24 normalized RGB)
+* @param img_out the image to be displayed on screen (320*240 grayscale)
+* @return the resulting label of the entry image
+* @brief Run the CNN system on input and generate output to be displayed
+**/
 char ImgProcTest(CNN_IMAGE_TYPE* img_in,CNN_DATA_TYPE* imageIN,CNN_IMAGE_TYPE* img_out)
 {
   bool outFiles=false;
-  CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE];
+  CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE]; 
   CNN_DATA_TYPE mem2[CNN_CONV1_OUT_SIZE];
 //  img_out[0]=img_in[0];
 
@@ -45,9 +56,7 @@ char ImgProcTest(CNN_IMAGE_TYPE* img_in,CNN_DATA_TYPE* imageIN,CNN_IMAGE_TYPE* i
       label = j;
     }
   }
-  if(verbosity){
-    printMatrix(mem2,'d',1,10,1);
-  }
+  if(verbosity) printMatrix(mem2,'d',1,10,1);
 
   display(label,imageIN,img_out);
   return(label);

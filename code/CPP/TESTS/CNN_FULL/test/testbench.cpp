@@ -1,3 +1,8 @@
+/**
+* @file testbench.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief Testbench of CNN_FULL
+**/
 #include "CNN.h"
 #include "ioImage.h"
 #include "normalize.h"

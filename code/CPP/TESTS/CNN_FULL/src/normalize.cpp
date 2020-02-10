@@ -1,3 +1,8 @@
+/**
+* @file CNN.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief normalization of picture
+**/
 #include "normalize.h"
 #include <math.h>
 void normalize(  CNN_DATA_TYPE* imageIN,  CNN_DATA_TYPE* imageOUT)

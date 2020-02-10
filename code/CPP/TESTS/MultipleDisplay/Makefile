@@ -4,6 +4,7 @@ SRCDIR = src
 INCDIR = include
 TESTDIR = test
 OUTPUTDIR = output
+DOCDIR = docs
 
 ACTYPESDIR = $(LIB_CNN)/ac_types/include
 ACMATHDIR = $(LIB_CNN)/ac_math/include
@@ -24,10 +25,13 @@ all :
 		@echo "in " $(DIRNAME)
 		@echo ""
 		@echo "Usage:"
-		@echo "CNN_test.exe => generate executable file"
-		@echo "clean => clean up the .o .pgm files"
+		@echo $(TARGET)" => generate executable file"
+		@echo "docu => generate documentation"
+		@echo "clean => clean up the .o .pgm files and docs folder"
 		@echo "mrproper => clean up everything"
 
+docu :
+	$(DOXYGEN) Doxyfile
 
 $(TARGET) : $(OBJTEST) $(OBJ)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
@@ -41,6 +45,7 @@ $(TARGET) : $(OBJTEST) $(OBJ)
 
 clean :
 	$(RM) $(OUTPUTDIR)/*
+	rm -rf $(DOCDIR)
 
 mrproper :
 	rm -rf $(OUTPUTDIR)

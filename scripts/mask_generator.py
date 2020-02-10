@@ -55,7 +55,7 @@ def writePGM(label,mat):
 
 def writeMaskFile(filename):
     with open(filename,"w") as f:
-        macroFile = open("include/macroMask.h","w")
+        macroFile = open("macroMask.h","w")
         f.write("//Masks for CNN overlay\n")
         f.write("#include \"types.h\"\n")
         labels = ("airplane","automobile","bird","cat","deer","dog","frog","horse","ship","truck")
@@ -79,4 +79,4 @@ def writeMaskFile(filename):
         macroFile.close()
 
 
-writeMaskFile("include/masks.h")
+writeMaskFile("masks.h")

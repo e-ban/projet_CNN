@@ -1,6 +1,17 @@
+/**
+* @file display.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief Contains the function for composing the final output of the CNN
+**/
 #include "display.h"
 #include "masks.h"
 #include <iostream>
+/**
+* @param label The label resulting from the CNN calculations describing the subject of the input picture
+* @param imageIn the input image to be displayed in the center of the 320*240 screen
+* @param imageOut the output of display function, and the module CNN
+* @brief Put the input image in the center of the screen and place an overlay with the class of the picture on the left bottom corner
+**/
 void display(char label,CNN_DATA_TYPE* imageIn,CNN_IMAGE_TYPE* imageOut)
 {
   int maskTop,maskBottom,maskLeft,maskRight;

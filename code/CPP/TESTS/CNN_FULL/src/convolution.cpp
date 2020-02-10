@@ -1,7 +1,20 @@
+/**
+* @file convolution.cpp
+* @author Iban Guinebert & Antoine Maillefert
+* @brief Contains the convolution + relu activation layer
+**/
+
 #include "convolutionReLU.h"
 
 
-
+/**
+* @param datain An array of data as input
+* @param dataout An array to write the resulting array in
+* @param weights Array of weights coefficient for the kernel
+* @param biases Array of biases to be added on each canal of the output
+* @param sel Selector of the convolution number (1<->3)
+* @brief Proceeds to the convolution of a kernel of weights on datain, makes a ReLU activation and add biases to output
+**/
 void convolutionReLU(  CNN_DATA_TYPE* datain, CNN_DATA_TYPE* dataout, CNN_COEFF_TYPE* weights,  CNN_COEFF_TYPE* biases,  int sel )
   {
     int height_in,width_in,canal_in,height_out, width_out, canal_out;
