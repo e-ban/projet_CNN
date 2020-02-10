@@ -7,9 +7,15 @@ projet_CNN/
       |
       |__code/
       |   |__CPP/
-      |   |   |__MultipleDisplay/  => C/CPP sources and tests for the display of several output on a screen 
-      |   |   |__CNN_FULL/         => C/CPP sources and tests for the Computation of the entirety of the CNN
-      |   |   |__EdgeDetector/     => C/CPP sources and tests for the edge detector convolution
+      |   |   |__TEST/
+      |   |   |   |__MultipleDisplay/  => C/CPP sources and tests for the display of several output on a screen 
+      |   |   |   |__CNN_FULL/         => C/CPP sources and tests for the Computation of the entirety of the CNN
+      |   |   |   |__EdgeDetector/     => C/CPP sources and tests for the edge detector convolution
+      |   |   |
+      |   |   |__PreHLS/ => sources ready to be synthesized with Catapult
+      |   |   |   |__CNN
+      |   |   |   |__Convolution
+      |   |   |   |__EdgeDetector
       |   | 
       |   |__Python/               => Python sources and scripts for evaluation of the algorithm
       |
