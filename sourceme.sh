@@ -1,3 +1,5 @@
 export PROJECT_CNN_TOP=$(pwd)
 export LIB_CNN="$PROJECT_CNN_TOP/libs"
+export EDGETEST="$PROJECT_CNN_TOP/code/CPP/TESTS/EdgeDetector"
+export CNNTEST="$PROJECT_CNN_TOP/code/CPP/TESTS/CNN_FULL"
 echo $LIB_CNN

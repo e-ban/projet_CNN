@@ -10,7 +10,7 @@
 #pragma hls_design top
 
 extern bool verbosity;/**< verbosity flag, only for debug purposes*/
-
+extern bool outFiles;
 /**
 * @param img_in The input image coming from the Camera (not used here)
 * @param imageIN The image to be processed by the system (24*24 normalized RGB)
@@ -20,8 +20,8 @@ extern bool verbosity;/**< verbosity flag, only for debug purposes*/
 **/
 char ImgProcTest(CNN_IMAGE_TYPE* img_in,CNN_DATA_TYPE* imageIN,CNN_IMAGE_TYPE* img_out)
 {
-  bool outFiles=false;
-  CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE]; 
+
+  CNN_DATA_TYPE mem1[CNN_CONV1_OUT_SIZE];
   CNN_DATA_TYPE mem2[CNN_CONV1_OUT_SIZE];
 //  img_out[0]=img_in[0];
 
@@ -58,6 +58,6 @@ char ImgProcTest(CNN_IMAGE_TYPE* img_in,CNN_DATA_TYPE* imageIN,CNN_IMAGE_TYPE* i
   }
   if(verbosity) printMatrix(mem2,'d',1,10,1);
 
-  display(label,imageIN,img_out);
+  display(label,img_in,img_out);
   return(label);
 }

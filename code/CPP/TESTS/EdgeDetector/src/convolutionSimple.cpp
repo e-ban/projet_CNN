@@ -10,7 +10,7 @@
 * @param kernel Array of weights coefficient for the kernel
 * @brief Proceeds to the convolution of a kernel of weights on datain
 **/
-void convolutionReLU( CNN_DATA_OUT_TYPE datain[CNN_IMAGE_IN_SIZE], CNN_DATA_TYPE dataout[CNN_CONV1_OUT_SIZE], CNN_COEFF_TYPE kernel[CNN_KERNEL1_SIZE]){
+void convolutionReLU( CNN_DATA_OUT_TYPE datain[CNN_IMAGE_IN_SIZE], CNN_DATA_OUT_TYPE dataout[CNN_CONV1_OUT_SIZE], CNN_COEFF_TYPE kernel[CNN_KERNEL1_SIZE]){
 
 	int height_in,width_in,canal_in,height_out, width_out, canal_out;
 	height_in = CNN_IMAGE_IN_H;

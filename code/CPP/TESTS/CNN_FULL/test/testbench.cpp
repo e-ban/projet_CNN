@@ -8,7 +8,7 @@
 #include "normalize.h"
 #include <string>
 #include <iostream>
-#include "image_test_CNN.h"
+
 bool verbosity=false;
 bool outFiles=false;
 //CNN_DATA_TYPE* imageIN;
@@ -103,16 +103,14 @@ int main(int argc,char* argv[] )
     normalize(imgResized,imageIN);
 
     if(outFiles) saveOutput("output/inputNormalized"+to_string(i),(void*)imageIN,'f',CNN_IMAGE_IN_H,CNN_IMAGE_IN_W,CNN_IMAGE_IN_C,"P3",0);
-
+    for(int j=0;j<CNN_IMAGE_IN_SIZE;j++) img_in[j]=(CNN_IMAGE_TYPE)imgResized[j];
     resultlabel=ImgProcTest(img_in,imageIN,img_out);
     if(outFiles) saveOutput("output/output"+to_string(i)+labelsTab[label]+to_string(i),(void*)img_out,'i',CNN_VGA_H,CNN_VGA_W,CNN_VGA_C,"P2",0);
-    //cout << labelsTab[resultlabel]<<endl;
     if(label==resultlabel)
     {
       if(verbosity) cout << "Image "<<i<<" : Success"<<endl;
       success++;
     }
-  /*  if(verbosity) cout <<"Image "<<i<<" ("<<labelsTab[label]<<") result is "<<labelsTab[resultlabel]<< "\n\ttotal success rate = "<< success/(i+1)<<endl;*/
   free(img_out);
   free(img_in);
   free(imgResized);

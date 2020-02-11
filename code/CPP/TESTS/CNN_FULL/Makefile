@@ -33,7 +33,8 @@ all :
 docu :
 	$(DOXYGEN) Doxyfile
 
-$(TARGET) : $(OBJTEST) $(OBJ)
+
+$(TARGET) : $(TESTDIR)/ioImage.o $(TESTDIR)/testbench.o $(OBJ)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
 	mkdir -p $(OUTPUTDIR)
 

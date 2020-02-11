@@ -31,7 +31,7 @@ class ConvRELU(layer):#layer of convolution which proceeds to a ReLU activation
                         for kerW in range(-(kWidth//2),kWidth//2+1):
                             for inChannel in range(canal):
                                 if (kerH+row < height and kerW+col < width and kerH+row>=0 and kerW+col>=0):
-                                    s=s+input[row+kerH,col+kerW,inChannel]*ker[kerH,kerW,inChannel,outChannel]
+                                    s=s+input[row+kerH,col+kerW,inChannel]*ker[kerH+1,kerW+1,inChannel,outChannel]
                     s=s+bias[outChannel]
                     if (s<0):
                         s=0
@@ -98,6 +98,7 @@ class ReshapeToVector(layer):
         shape=input.shape
         self.output=input.reshape(shape[0]*shape[1]*shape[2])
 
+
 class Perceptron(layer):
     def __init__(self,parameters):
         self.weights=parameters[0]
@@ -142,8 +143,10 @@ class CNN:
         buf=inputPic
         if(len(inputPic)>0):
             for layer in self.layers:
+                print(type(layer).__name__)
                 layer.build(buf)
                 buf=layer.output
+                print(buf)
         return buf
 
 def cifar10():

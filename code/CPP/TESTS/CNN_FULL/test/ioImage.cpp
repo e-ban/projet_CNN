@@ -31,7 +31,7 @@ void saveOutput(std::string filename,void* image,char type,int height,int width,
     for (int i=canal;i<height*width*canal_size;i+=iter){
       switch(type)
       {
-        case 'd': f << (CNN_IMAGE_TYPE)((CNN_DATA_TYPE*)image)[i] << " ";
+        case 'd': f << (CNN_IMAGE_TYPE)(80*((CNN_DATA_TYPE*)image)[i]) << " ";
         break;
         case 'i': f << ((CNN_IMAGE_TYPE*)image)[i] << " ";
         break;
