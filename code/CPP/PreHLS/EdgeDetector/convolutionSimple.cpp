@@ -26,7 +26,7 @@ void convolutionReLU( CNN_DATA_OUT_TYPE datain[CNN_IMAGE_IN_SIZE], CNN_DATA_OUT_
 		  {
        	            if(row+kerH>=0 && row+kerH<height_in && col+kerW>=0 && col+kerW<width_in)
 		    {
-       	              s=s+(CNN_DATA_OUT_TYPE)datain[width_in*canal_in*(row+kerH)+canal_in*(col+kerW)+inChannel]*kernel[CNN_KERNEL_W*canal_in*canal_out*(kerH+1)+canal_in*canal_out*(kerW+1)+canal_in*inChannel+outChannel];
+       	              s=s+(CNN_DATA_OUT_TYPE)datain[width_in*canal_in*(row+kerH)+canal_in*(col+kerW)+inChannel]*kernel[CNN_KERNEL_W*canal_in*canal_out*(kerH+1)+canal_in*canal_out*(kerW+1)+canal_out*inChannel+outChannel];
        	            }
        	          }
        	        }

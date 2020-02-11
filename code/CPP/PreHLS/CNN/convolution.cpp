@@ -44,7 +44,7 @@ void convolutionReLU(  CNN_DATA_TYPE* datain, CNN_DATA_TYPE* dataout, CNN_COEFF_
               for(int inChannel=0;inChannel<canal_in;inChannel++)
               {
                 if(row+kerH>=0 && row+kerH<height_in && col+kerW>=0 && col+kerW<width_in){
-                  s=s+datain[width_in*canal_in*(row+kerH)+canal_in*(col+kerW)+inChannel]*weights[CNN_KERNEL_W*canal_in*canal_out*(kerH+1)+canal_in*canal_out*(kerW+1)+canal_in*inChannel+outChannel];
+                  s=s+datain[width_in*canal_in*(row+kerH)+canal_in*(col+kerW)+inChannel]*weights[CNN_KERNEL_W*canal_in*canal_out*(kerH+1)+canal_in*canal_out*(kerW+1)+canal_out*inChannel+outChannel];
                 }
               }
             }
