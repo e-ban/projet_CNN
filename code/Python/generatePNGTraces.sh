@@ -1,5 +1,5 @@
 ./clean.sh
-python3 testConvolution.py
+python3 testLayers.py
 convert generated_pgm/input.pgm -filter point -scale 10000% input.png
 convert generated_pgm/inputCropped.pgm -filter point -scale 10000% inputCropped.png
 convert generated_pgm/inputNormalized.pgm -filter point -scale 10000% inputNormalized.png

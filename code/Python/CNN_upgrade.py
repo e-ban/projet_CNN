@@ -143,10 +143,10 @@ class CNN:
         buf=inputPic
         if(len(inputPic)>0):
             for layer in self.layers:
-                print(type(layer).__name__)
+                #print(type(layer).__name__)
                 layer.build(buf)
                 buf=layer.output
-                print(buf)
+                #print(buf)
         return buf
 
 def cifar10():
