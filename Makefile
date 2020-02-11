@@ -13,7 +13,7 @@ all :
 
 install_ac_libs :
 	@echo "Installation of ac_types and ac_maths"
-	mkdir libs
+	mkdir -p libs
 	cd libs && git clone https://github.com/hlslibs/ac_types.git &&\
 	git clone https://github.com/hlslibs/ac_math.git
 

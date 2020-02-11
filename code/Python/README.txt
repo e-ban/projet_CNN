@@ -20,15 +20,24 @@ Reference_python
       |
       |__ testCIFAR10.py : python script that processes images from data_batch_1.bin in the CNN then compare the resulting label with the right one
       |
-      |__ testConvolution.py : python script that processes a picture with a convolution alone and write pgm files of each canal
+      |__ testLayers.py : python script that processes a picture through layers of CNN and print pgm traces for debugging
       |
-      |__ testNormalization.py : python script that write input picture as pgm and normalized picture as well
+      |__ generateImageHeader.py : python script that read a picture in raw format and create C header files with initialised array of the picture and its normalization
+      |
+      |__ generatePNGTraces.sh : script that generate PGM traces and convert some in png at a bigger size for report
 
+Usage :
 To run the script files :
 python3 CNN.py
 python3 testCIFAR10.py
-python3 testConvolution.py
-python3 testNormalization.py
+python3 testLayers.py
+python3 generateImageHeader.py
+
+To generate useful traces for report :
+./generatePNGTraces.sh
 
 To clean pgm and .h :
 ./clean.sh
+
+To generate documentation :
+doxygen Doxyfile

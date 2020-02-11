@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from CNN_upgrade import *
+from ioPGM import *
 import numpy as np
 
 if __name__=="__main__":
@@ -12,7 +13,8 @@ if __name__=="__main__":
     cnn.addNormalizeLayer()
     crop=centered_crop(image,24,24)
     result=cnn.run(crop)
-    print(result)
+
+    #print(result)
     f=open("imageNorm.h","w")
     f.write("CNN_DATA_TYPE imageNorm["+str(result.size)+"={")
     for line in range(result.shape[0]):

@@ -96,7 +96,7 @@ class Normalize(layer):
 class ReshapeToVector(layer):
     def build(self,input):
         shape=input.shape
-        self.output=input.transpose(2,1,0).reshape(shape[0]*shape[1]*shape[2])
+        self.output=input.reshape(shape[0]*shape[1]*shape[2])
 
 class Perceptron(layer):
     def __init__(self,parameters):
@@ -140,13 +140,10 @@ class CNN:
 
     def run(self,inputPic):
         buf=inputPic
-        write_pgm(inputPic,"input")
         if(len(inputPic)>0):
             for layer in self.layers:
-                #print(type(layer))
                 layer.build(buf)
                 buf=layer.output
-                #write_pgm(buf,str(type(layer).__name__))
         return buf
 
 def cifar10():

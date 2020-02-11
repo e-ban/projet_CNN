@@ -100,22 +100,24 @@ class CNN :
         self.matrixPix=self.matrixPix.astype(np.float64)
         N=self.width * self.height
         matN = np.array([[[ 0 for k in range(self.canal)] for w in range(self.width)] for h in range(self.height)],dtype=np.float64)
+        u=[0.0,0.0,0.0]
+        sig=[0.0,0.0,0.0]
         for c in range (self.canal):
-            u=0
-            sig=0
             for i in range(self.height):
                 for j in range(self.width):
-                    u=u+self.matrixPix[i,j,c]/N
+                    u[c]=u[c]+self.matrixPix[i,j,c]/N
+        umoy=(u[0]+u[1]+u[2])/3
+        for c in range (self.canal):
             for k in range(self.height):
                 for l in range(self.width):
-                    sig=sig+(self.matrixPix[k,l,c]-u)**2
-
-            sig=math.sqrt(sig/N)
-            div = max(sig,1/(math.sqrt(N)))
-
+                    sig[c]=sig[c]+(self.matrixPix[k,l,c]-umoy)**2
+            sig[c]=math.sqrt(sig[c]/N)
+        sigmoy=(sig[0]+sig[1]+sig[2])/3
+        div = max(sigmoy,1/(math.sqrt(N)))
+        for c in range (self.canal):
             for m in range(self.height):
                 for n in range(self.width):
-                    matN[m,n,c] = (self.matrixPix[m,n,c]-u)/div
+                    matN[m,n,c] = (self.matrixPix[m,n,c]-umoy)/div
         self.matrixPix = matN
         return 0
 

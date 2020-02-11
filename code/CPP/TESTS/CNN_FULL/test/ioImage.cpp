@@ -100,7 +100,7 @@ void printMatrix(void* image,char type,int height,int width,int canal)
       case 'd': std::cout << ((CNN_DATA_TYPE*)image)[i] << " ";
       break;
       case 'i': std::cout << ((CNN_IMAGE_TYPE*)image)[i] << " ";
-      break:
+      break;
       default:
       break;
     }
