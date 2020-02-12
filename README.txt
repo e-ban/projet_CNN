@@ -26,7 +26,7 @@ projet_CNN/
       |   |__edge_detector2.bit        => final version of edge detector
       |
       |__EDF_files/		       => results from catapult C synthesis of the Edge Detector and the CNN [may not be the final version]
-      |__doc/
+      |__doc/			    => contains the report
       |__libs/                      => contains ac_types and ac_math libraries
       |__masks/                     => contains the 10 masks for the overlay in pgm format
       |__scripts/                   => contains several useful python scripts
