@@ -3,7 +3,7 @@
 * @author Iban Guinebert & Antoine Maillefert
 * @brief Testbench of CNN_FULL
 **/
-#include "CNN.h"
+#include "CNN_test.h"
 #include "ioImage.h"
 #include "normalize.h"
 #include <string>
@@ -103,7 +103,7 @@ int main(int argc,char* argv[] )
     normalize(imgResized,imageIN);
 
     if(outFiles) saveOutput("output/inputNormalized"+to_string(i),(void*)imageIN,'f',CNN_IMAGE_IN_H,CNN_IMAGE_IN_W,CNN_IMAGE_IN_C,"P3",0);
-    for(int j=0;j<CNN_IMAGE_IN_SIZE;j++) img_in[j]=(CNN_IMAGE_TYPE)imgResized[j];
+    for(int j=0;j<CNN_IMAGE_FULL_SIZE;j++) img_in[j]=(CNN_IMAGE_TYPE)imgInput[j];
     resultlabel=ImgProcTest(img_in,imageIN,img_out);
     if(outFiles) saveOutput("output/output"+to_string(i)+labelsTab[label]+to_string(i),(void*)img_out,'i',CNN_VGA_H,CNN_VGA_W,CNN_VGA_C,"P2",0);
     if(label==resultlabel)

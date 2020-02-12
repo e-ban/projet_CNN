@@ -1,4 +1,5 @@
-TARGET = CNN_test.exe
+TARGET1 = CNN_test.exe
+TARGET2 = CNN_Batch.exe
 DIRNAME = `basename $(PWD)`
 SRCDIR = src
 INCDIR = include
@@ -25,7 +26,8 @@ all :
 		@echo "in " $(DIRNAME)
 		@echo ""
 		@echo "Usage:"
-		@echo $(TARGET)" => generate executable file"
+		@echo $(TARGET1)" => generate executable file for test of pre-HLS code"
+		@echo $(TARGET2)" => generate executable file for test of CNN on batch of pictures"
 		@echo "docu => generate documentation"
 		@echo "clean => clean up the .o .pgm files and docs folder"
 		@echo "mrproper => clean up everything"
@@ -33,8 +35,11 @@ all :
 docu :
 	$(DOXYGEN) Doxyfile
 
+$(TARGET1) : $(TESTDIR)/ioImage.o $(TESTDIR)/testbenchCNN.o $(OBJ)
+		$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
+		mkdir -p $(OUTPUTDIR)
 
-$(TARGET) : $(TESTDIR)/ioImage.o $(TESTDIR)/testbench.o $(OBJ)
+$(TARGET2) : $(TESTDIR)/ioImage.o $(TESTDIR)/testbenchBatch.o $(TESTDIR)/CNN_TEST.cpp $(OBJ)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
 	mkdir -p $(OUTPUTDIR)
 
@@ -50,4 +55,4 @@ clean :
 
 mrproper :
 	rm -rf $(OUTPUTDIR)
-	$(RM) $(TARGET) $(OBJ) $(OBJTEST)
+	$(RM) $(TARGET1) $(TARGET2) $(OBJ) $(OBJTEST)

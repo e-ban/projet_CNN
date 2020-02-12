@@ -109,9 +109,9 @@ void display(char label,CNN_IMAGE_TYPE* imageIn,CNN_IMAGE_TYPE* imageOut)
       if(io>=CADRE_VGA_TOP && io<CADRE_VGA_BOTTOM && jo>=CADRE_VGA_LEFT && jo<CADRE_VGA_RIGHT)
       {
         temp=0;
-        for(int canal=0;canal<CNN_IMAGE_IN_C;canal++)
+        for(int canal=0;canal<CNN_IMAGE_FULL_C;canal++)
         {
-         temp += coeffRGB[canal]*(CNN_DATA_TYPE)imageIn[(io-CADRE_VGA_TOP)*CNN_IMAGE_IN_W*CNN_IMAGE_IN_C+(jo-CADRE_VGA_LEFT)*CNN_IMAGE_IN_C+canal];
+         temp += coeffRGB[canal]*(CNN_DATA_TYPE)imageIn[(io-CADRE_VGA_TOP)*CNN_IMAGE_FULL_W*CNN_IMAGE_FULL_C+(jo-CADRE_VGA_LEFT)*CNN_IMAGE_FULL_C+canal];
 
         }
         imageOut[io*CNN_VGA_W+jo] = (CNN_IMAGE_TYPE)temp;
