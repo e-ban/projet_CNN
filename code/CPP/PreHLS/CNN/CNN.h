@@ -7,7 +7,7 @@
 #include "maxpool.h"
 #include "perceptron.h"
 #include "display.h"
-#include "reshape.h"
+
 
 void ImgProcTest(CNN_IMAGE_TYPE* ,CNN_IMAGE_TYPE*);
 

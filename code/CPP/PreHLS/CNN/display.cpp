@@ -1,7 +1,7 @@
 #include "display.h"
 #include "masks.h"
 #include <iostream>
-void display(char label,CNN_DATA_TYPE* imageIn,CNN_IMAGE_TYPE* imageOut)
+void display(char label,CNN_IMAGE_TYPE* imageIn,CNN_IMAGE_TYPE* imageOut)
 {
   int maskTop,maskBottom,maskLeft,maskRight;
   CNN_MASK_TYPE* mask;
