@@ -44,3 +44,6 @@ make cleaner => clean_all+uninstall libraries
 
 Source libraries for tests :
 source sourceme.h
+
+/!\ data_batch_1.bin from CIFAR10 dataset should be added in "code/Python/" and "code/CPP/TESTS/CNN_FULL" 
+https://www.cs.toronto.edu/~kriz/cifar.html

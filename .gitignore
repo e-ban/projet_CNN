@@ -1,2 +1,4 @@
 SEI_SoC_CNN/*
-*.pgm
+*.o
+*~
+*.exe
