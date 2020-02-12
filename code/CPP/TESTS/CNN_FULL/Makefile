@@ -55,4 +55,5 @@ clean :
 
 mrproper :
 	rm -rf $(OUTPUTDIR)
+	rm -rf $(DOCDIR)
 	$(RM) $(TARGET1) $(TARGET2) $(OBJ) $(OBJTEST)

@@ -5,7 +5,7 @@
 
 void saveOutput(std::string filename,void* image,char type,int height,int width,int canal_size,std::string format,int canal)
 {
-  std::ofstream f(filename+".pgm");
+  std::ofstream f("output/"+filename+".pgm");
   int iter=1;
   if(format=="P2") iter=canal_size;
   f<<format<<std::endl;
