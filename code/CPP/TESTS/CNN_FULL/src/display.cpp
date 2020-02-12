@@ -99,6 +99,8 @@ void display(char label,CNN_IMAGE_TYPE* imageIn,CNN_IMAGE_TYPE* imageOut)
 
   CNN_DATA_TYPE coeffRGB[]={0.3,0.59,0.11};
   int widthMask=maskRight-maskLeft;
+  maskLeft+=(320-widthMask)/2;
+  maskRight+=(320-widthMask)/2;
   CNN_DATA_TYPE temp;
   for (int io=0;io<CNN_VGA_H;io++)
   {
