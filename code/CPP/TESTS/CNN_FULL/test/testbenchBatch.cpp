@@ -106,16 +106,22 @@ int main(int argc,char* argv[] )
     for(int j=0;j<CNN_IMAGE_FULL_SIZE;j++) img_in[j]=(CNN_IMAGE_TYPE)imgInput[j];
     resultlabel=ImgProcTest(img_in,imageIN,img_out);
     if(outFiles) saveOutput("output/output"+to_string(i)+labelsTab[label]+to_string(i),(void*)img_out,'i',CNN_VGA_H,CNN_VGA_W,CNN_VGA_C,"P2",0);
+    cout << "\nImage "<<i<<" ["<<labelsTab[label]<<"] / result : "<<labelsTab[resultlabel];
     if(label==resultlabel)
+      {
+        if(verbosity) cout <<" : Success";
+        success++;
+      }
+    else
     {
-      if(verbosity) cout << "Image "<<i<<" : Success"<<endl;
-      success++;
+      if(verbosity) cout <<" : Fail";
     }
-  free(img_out);
-  free(img_in);
-  free(imgResized);
-  free(imgInput);
-  free(imageIN);
+    cout << endl;
+    free(img_out);
+    free(img_in);
+    free(imgResized);
+    free(imgInput);
+    free(imageIN);
   }
   cout <<"total success rate = "<< success/(NBloop)<<endl;
 
