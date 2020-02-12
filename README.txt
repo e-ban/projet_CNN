@@ -20,9 +20,8 @@ projet_CNN/
       |   |__Python/                   => Python sources and scripts for evaluation of the algorithm
       |
       |__Bitstreams/
-      |   |__CNN.bit                   => [old] version of CNN that prints normalized picture
-      |   |__CNN_v2.bit                => final version of CNN that prints input picture
-      |   |__edge_detector1.bit        => [old] version of edge detector
+      |   |__old/                       => [old] version of bitstreams
+      |   |__CNN_v3.bit                => final version of CNN that prints input picture
       |   |__edge_detector2.bit        => final version of edge detector
       |
       |__EDF_files/		       => results from catapult C synthesis of the Edge Detector and the CNN [may not be the final version]
